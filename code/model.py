@@ -30,6 +30,25 @@ plt.rcParams.update({
     "grid.color": "#E4DCCB", "grid.linewidth": 0.7, "font.size": 10,
 })
 
+# ---- risk register (probability, impact), in table order -------------------------
+RISKS = [(2, 5), (3, 4), (4, 3), (3, 4), (2, 3), (2, 3)]
+
+
+def risk_marker_tex():
+    """TikZ marker nodes for the risk map. Markers sharing a grid cell are spread
+    horizontally and centred on the cell, so none can hide another (incident I-13)."""
+    cells = {}
+    for n, rc in enumerate(RISKS, 1):
+        cells.setdefault(rc, []).append(n)
+    out = []
+    for (p, i), ids in cells.items():
+        for k, n in enumerate(ids):
+            dx = (k - (len(ids) - 1) / 2) * 0.30
+            out.append(r"\node[circle,fill=mtealdark,text=white,font=\sffamily\tiny\bfseries,"
+                       rf"inner sep=1.4pt] at ({p + dx:.2f},{i}) {{\num{{{n}}}}};")
+    return "\n".join(out) + "\n"
+
+
 # ---- assumptions (ILS) -----------------------------------------------------------
 TIERS = {  # name: (price per order, variable cost per order, share of orders)
     "Basic":    (390.0,   85.0, 0.55),
@@ -177,6 +196,9 @@ def main():
         "ProbPositive": f"{p_pos*100:.0f}", "McTen": fmt(p10), "McNinety": fmt(p90),
         "OrdersEnd": str(int(round(r["n"][-1]))), "SensWorstLoss": fmt(abs(worst)),
     }
+    for n, (p, i) in enumerate(RISKS):
+        macros[f"RiskP{chr(97 + n)}"] = str(p); macros[f"RiskI{chr(97 + n)}"] = str(i)
+    (FIG / "riskmap.tex").write_text(risk_marker_tex(), encoding="utf-8")
     lines = [f"\\newcommand{{\\M{k}}}{{{v}}}" for k, v in macros.items()]
     (FIG / "numbers.tex").write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(macros)

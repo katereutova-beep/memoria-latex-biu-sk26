@@ -10,12 +10,12 @@
 \toprule
 \theadrow \thead{סיכון} & \thead{הסתברות} & \thead{השפעה} & \thead{התמודדות} \\
 \midrule
-דליפת תמונות לקוחות & \num{2} & \num{5} & הצפנה, הרשאות מינימליות, ביקורת גישה \\
-שחזור ״מזייף״ פרטי פנים & \num{3} & \num{4} & בקרת אדם חובה, שמירת המקור, סימון שחזור \\
-תחרות מאפליקציות חינמיות & \num{4} & \num{3} & בידול באמצעות שירות, ארכיון ופרטיות \\
-קצב הזמנות איטי מהתחזית & \num{3} & \num{4} & עדכון תקציב שיווק, ניתוח רגישות בפרק הקודם \\
-תלות במודלי \en{AI} של צד שלישי & \num{2} & \num{3} & ארכיטקטורה מודולרית, מודלים בקוד פתוח \\
-תביעת זכויות יוצרים & \num{2} & \num{3} & הצהרת בעלות בטופס הקליטה \\
+דליפת תמונות לקוחות & \num{\MRiskPa} & \num{\MRiskIa} & הצפנה, הרשאות מינימליות, ביקורת גישה \\
+שחזור ״מזייף״ פרטי פנים & \num{\MRiskPb} & \num{\MRiskIb} & בקרת אדם חובה, שמירת המקור, סימון שחזור \\
+תחרות מאפליקציות חינמיות & \num{\MRiskPc} & \num{\MRiskIc} & בידול באמצעות שירות, ארכיון ופרטיות \\
+קצב הזמנות איטי מהתחזית & \num{\MRiskPd} & \num{\MRiskId} & עדכון תקציב שיווק, ניתוח רגישות בפרק הקודם \\
+תלות במודלי \en{AI} של צד שלישי & \num{\MRiskPe} & \num{\MRiskIe} & ארכיטקטורה מודולרית, מודלים בקוד פתוח \\
+תביעת זכויות יוצרים & \num{\MRiskPf} & \num{\MRiskIf} & הצהרת בעלות בטופס הקליטה \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -29,8 +29,7 @@
     \else\ifnum\numexpr\i*\j\relax>7 \fill[mamber!35] (\i-0.5,\j-0.5) rectangle (\i+0.5,\j+0.5);
     \else \fill[mteal!15] (\i-0.5,\j-0.5) rectangle (\i+0.5,\j+0.5);\fi\fi
     \draw[white,line width=1pt] (\i-0.5,\j-0.5) rectangle (\i+0.5,\j+0.5);}
-  \foreach \i/\j/\n in {2/5/1,3/4/2,4/3/3,3/4/4,2/3/5,2/3/6} {
-    \node[circle,fill=mtealdark,text=white,font=\sffamily\tiny\bfseries,inner sep=1.4pt] at (\i-0.18+0.05*\n,\j+0.1-0.05*\n) {\num{\n}};}
+  \input{figures/riskmap.tex}
   \node[font=\sffamily\scriptsize,rotate=90] at (-0.2,3) {\en{Impact}};
   \node[font=\sffamily\scriptsize] at (3,-0.2) {\en{Probability}};
 \end{tikzpicture}\end{english}
