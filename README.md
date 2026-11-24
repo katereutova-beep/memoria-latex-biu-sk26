@@ -49,6 +49,12 @@ Roles are defined as Skills: `lead`, `writer`, `analyst`, `detector`, `fixer`, p
 
 Iron rule: **never fix text directly**. Every defect is repaired in the CLS, a Skill or the generator, the CLS version is bumped, and an incident review records *why it happened* and *why it was not detected*. [`docs/incidents.md`](docs/incidents.md) lists 11 incidents from QA round 1, including one reliability defect (a caption that claimed results the model did not produce). CLS history: [`docs/cls-changelog.md`](docs/cls-changelog.md).
 
+### Agent mesh check (PING / PONG)
+The `lead` agent pinged every other agent session on the machine and recorded the replies ([`docs/mesh-check.md`](docs/mesh-check.md)). The image below is rendered from that file (a generated capture, not a window screenshot).
+
+![mesh](docs/screenshots/mesh.png)
+
+Honest notes: only lead-to-peer links were tested, not peer-to-peer. The check found duplicate sessions (two writers, detectors, fixers and leads) from earlier starts, which makes bare-name messages ambiguous; for the real QA rounds a single set of five sessions should be kept.
 ### Skills used
 `qa-super` · `qa-BiDi` · `qa-table` · `qa-code` · `qa-img` · `qa-typeset` · `qa-infra` · `qa-cls-version` · `detector` · `fixer` — files in [`skills/`](skills).
 
