@@ -1,8 +1,8 @@
 %% memoria.cls -- custom class for the Memoria business plan (Assignment 02, biu-sk26)
 %% Requires LuaLaTeX. Hebrew (RTL) + English (LTR) with one OpenType family.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{memoria}[2026/11/24 v1.0.0 Memoria bilingual report class]
-\newcommand{\memoriaversion}{1.0.0}
+\ProvidesClass{memoria}[2026/11/24 v1.1.0 Memoria bilingual report class]
+\newcommand{\memoriaversion}{1.1.0}
 
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
 \ProcessOptions\relax
@@ -18,7 +18,7 @@
 \setotherlanguage{english}
 \setmainfont{Libertinus Serif}
 \setsansfont{Libertinus Sans}
-\setmonofont{Libertinus Mono}[Scale=0.9]
+\setmonofont{Libertinus Mono}[Scale=0.9,BoldFont={Libertinus Mono},ItalicFont={Libertinus Mono}]
 \newfontfamily\hebrewfont{Libertinus Serif}
 \newfontfamily\hebrewfontsf{Libertinus Sans}
 \newfontfamily\hebrewfonttt{Libertinus Mono}[Scale=0.9]
@@ -44,6 +44,8 @@
 \RequirePackage{fancyhdr}
 \RequirePackage{titlesec}
 \RequirePackage{etoc}
+\RequirePackage{needspace}
+\RequirePackage{etoolbox}
 \RequirePackage[backend=biber,style=ieee,sorting=none]{biblatex}
 \RequirePackage[hidelinks,colorlinks=true,linkcolor=mteal,urlcolor=mteal,citecolor=mteal]{hyperref}
 
@@ -57,6 +59,9 @@
 \titleformat{\subsection}{\large\bfseries\color{mtealdark}\sffamily}{\thesubsection}{0.6em}{}
 \titlespacing*{\section}{0pt}{1.6em}{0.9em}
 \titlespacing*{\subsection}{0pt}{1.2em}{0.5em}
+\pretocmd{\section}{\Needspace*{9\baselineskip}}{}{}
+\pretocmd{\subsection}{\Needspace*{5\baselineskip}}{}{}
+\lstset{showstringspaces=false,columns=fullflexible,keepspaces=true}
 
 %% ---- header banner and footer ---------------------------------------------
 \newcommand{\memoriagroup}{biu-sk26}

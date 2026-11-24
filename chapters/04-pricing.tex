@@ -1,3 +1,48 @@
-\section{04-pricing}
-Skeleton text. \en{English} \num{123}.
-\nocite{placeholder}
+\section{מודל עסקי ותמחור \en{(Business Model \& Pricing)}}
+
+\subsection{מודל ההכנסות}
+ההכנסות של \en{Memoria} מגיעות משני מקורות: הזמנות חד־פעמיות בשלוש חבילות, ומנוי חודשי אופציונלי לאחסון וגיבוי בענן. מבנה זה מאזן בין הכנסה גבוהה להזמנה לבין הכנסה חוזרת צפויה, ובהתאם לתבנית \en{Business Model Canvas} \cite{osterwalder2010} הוא נשען על תוספת ערך אחרי המכירה ולא רק על המכירה עצמה.
+
+\subsection{חבילות ומחירים}
+\begin{table}[h]
+\centering
+\caption{חבילות השירות ומחיריהן (ש״ח, לא כולל מע״מ)}
+\label{tab:tiers}
+\small
+\begin{tabularx}{\textwidth}{>{\bfseries}l X r r r}
+\toprule
+\theadrow \thead{חבילה} & \thead{מה כלול} & \thead{מחיר} & \thead{עלות משתנה} & \thead{נתח הזמנות} \\
+\midrule
+\en{Basic} & עד \num{10} תמונות: סריקה, ניקוי שריטות, הגדלה & \num{390} & \num{85} & \num{55}\% \\
+\en{Pro} & עד \num{10} תמונות: הכול ב-\en{Basic} + שחזור פנים וצביעה + בקרת אדם מורחבת & \num{790} & \num{190} & \num{35}\% \\
+\en{Heritage} & עד \num{50} תמונות, ארכיון עם מטא־נתונים, אלבום מודפס, כונן \en{USB} & \num{2{,}900} & \num{780} & \num{10}\% \\
+\midrule
+\multicolumn{2}{l}{\textbf{ממוצע משוקלל להזמנה}} & \textbf{\num{\MAvgOrderPrice}} & \textbf{\num{\MAvgOrderVar}} & \num{100}\% \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{מנוי אחסון}
+מנוי ״ארכיון חי״ עולה \num{19} ש״ח לחודש וכולל גיבוי מוצפן, שיתוף עם עד \num{10} בני משפחה והוספת תיאורים לתמונות. אנו מניחים ששיעור הצירוף הוא \num{30}\% מהלקוחות וששיעור הנטישה החודשי הוא \num{2}\%. עלות האחסון והתמיכה למנוי היא \num{3} ש״ח לחודש.
+
+\subsection{הצעות משלימות}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{תמונה נוספת}: \num{45} ש״ח לתמונה ב-\en{Basic}, \num{95} ש״ח ב-\en{Pro}.
+  \item \textbf{הנחת כמות}: \num{10}\% מעל \num{3} הזמנות של אותה משפחה בשנה; \num{15}\% לארגונים ללא מטרות רווח.
+  \item \textbf{משלוח מהיר}: תוספת של \num{25}\% לאספקה תוך \num{48} שעות.
+  \item \textbf{אירוע}: חבילת \en{Heritage} בתוספת מסך תצוגה דיגיטלי בהשכרה, \num{450} ש״ח.
+\end{itemize}
+
+\subsection{היגיון התמחור}
+המחיר נקבע לפי שלושה שיקולים: עלות משתנה כוללת עבודה, \en{GPU} וחומרים; מחיר ״נקודת הכאב״ של הלקוח (שעה של מעצב ב-\en{Photoshop} עולה בשוק כ-\num{150} ש״ח, ושחזור ידני של תמונה אחת לוקח כ-\num{2} שעות); ומרווח תרומה שמממן את העלויות הקבועות. הנוסחה שמנחה אותנו היא
+\begin{equation}
+  p \;=\; \frac{v}{1-m}, \qquad m = \text{margin target},
+\end{equation}
+כאשר $p$ הוא המחיר, $v$ העלות המשתנה ו-$m$ שיעור הרווח הגולמי הרצוי. עבור \en{Basic} מתקבל $m = 1 - 85/390 \approx 78\%$, ועבור \en{Heritage} $m \approx 73\%$. הפער נובע מעלות הדפסה ואריזה של האלבום.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.72\textwidth]{figures/tier_mix.pdf}
+\caption{הכנסה ותרומה להזמנה ממוצעת לפי חבילה: \en{Heritage} מהווה \num{10}\% מההזמנות אך תורמת את החלק הגדול ביותר מההכנסה.}
+\label{fig:tiermix}
+\end{figure}

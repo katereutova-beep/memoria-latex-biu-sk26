@@ -1,0 +1,14 @@
+# Incident log (post-mortems)
+
+Format: what happened · root cause · why it was not detected · fix at the right level (iron rule: Skill / CLS / generator, never a text-only patch).
+
+| ID | Defect | Root cause | Why not detected earlier | Fix level |
+|---|---|---|---|---|
+| I-01 | English subtitle invisible on title page | Subtitle colour (cream) continued below the teal band, cream-on-cream | No skill checked contrast on the title page; first render was not inspected visually | CLS: title-page spacing; `qa-img` now requires a visual page-1 check |
+| I-02 | Footer and title-page credit line showed mixed-script text in wrong order | Hebrew main language reorders loose `\en{}` fragments separated by bullets | `qa-BiDi` only grepped chapters, not CLS-generated strings | CLS: whole line wrapped in one `\en{}` unit; `qa-BiDi` now covers header/footer |
+| I-03 | `Undefined control sequence` for `\MRevenueY1` | TeX macro names cannot contain digits; generator emitted them | No generator-output check before compiling | Generator (`model.py`): digit-free macro names; `qa-code` checks emitted macro names |
+| I-04 | Single TOC line spilled onto an otherwise empty page | TOC exactly one line longer than a page, followed by `\clearpage` | `qa-typeset` had no empty-page rule at that time | CLS/main: compact TOC; `qa-typeset` rule "no page under 30% filled" |
+| I-05 | Pipeline figure broke: key `step` requires a value | `step` is a reserved TikZ key; style name collided | Figure compiled in isolation never | Style renamed `pstep`; `qa-img` lists reserved TikZ names |
+| I-06 | Pipeline and Gantt figures clipped at the page edge | TikZ pictures inherit RTL anchoring in a Hebrew document | Overfull-box warnings are not issued for figures drawn in `tikzpicture` | Figures wrapped in `english`; rule added to `qa-img` |
+| I-07 | Caption claimed the sensitivity map is positive everywhere, but the model gives about -0.9 M ILS in the worst corner | Caption written from expectation, not from model output | No skill compared prose claims with generated numbers | Generator now emits `\MSensWorstLoss`; new rule in `qa-table`: every numeric claim must be a generated macro |
+| I-08 | Orphan section headings at page bottoms | Template had no keep-with-next rule | `qa-typeset` only checked boxes, not headings | CLS v1.1.0: `\Needspace` before sections |

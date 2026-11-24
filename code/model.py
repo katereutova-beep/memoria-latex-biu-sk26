@@ -163,18 +163,19 @@ def main():
     r = run()
     fig_revenue_costs(r); fig_cash(r); fig_breakeven(r); fig_mix(); fig_sensitivity()
     p_pos, p10, p90 = monte_carlo()
+    worst = min(run(p, v)["cash"][-1] for p in (0.8, 1.2) for v in (0.6, 1.4))
     cm = r["avg_price"] - r["avg_var"]
     be_m = first_positive(r["profit"]); pb_m = first_positive(r["cash"])
     fmt = lambda v: f"{int(round(v)):,}".replace(",", "{,}")
     macros = {
         "AvgOrderPrice": fmt(r["avg_price"]), "AvgOrderVar": fmt(r["avg_var"]),
         "ContribPerOrder": fmt(cm), "BreakEvenMonth": str(be_m), "PaybackMonth": str(pb_m),
-        "BreakEvenOrdersY1": str(int(np.ceil(fixed_costs(np.array([6]))[0] / cm))),
+        "BreakEvenOrdersEarly": str(int(np.ceil(fixed_costs(np.array([6]))[0] / cm))),
         "Investment": fmt(INVESTMENT),
-        "RevenueY1": fmt(r["revenue"][:12].sum()), "RevenueY3": fmt(r["revenue"][24:].sum()),
-        "ProfitY3": fmt(r["profit"][24:].sum()), "CashEnd": fmt(r["cash"][-1]),
+        "RevenueYearOne": fmt(r["revenue"][:12].sum()), "RevenueYearThree": fmt(r["revenue"][24:].sum()),
+        "ProfitYearThree": fmt(r["profit"][24:].sum()), "CashEnd": fmt(r["cash"][-1]),
         "ProbPositive": f"{p_pos*100:.0f}", "McTen": fmt(p10), "McNinety": fmt(p90),
-        "OrdersEnd": str(int(round(r["n"][-1]))),
+        "OrdersEnd": str(int(round(r["n"][-1]))), "SensWorstLoss": fmt(abs(worst)),
     }
     lines = [f"\\newcommand{{\\M{k}}}{{{v}}}" for k, v in macros.items()]
     (FIG / "numbers.tex").write_text("\n".join(lines) + "\n", encoding="utf-8")

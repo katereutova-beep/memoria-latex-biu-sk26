@@ -1,3 +1,83 @@
-\section{05-financials}
-Skeleton text. \en{English} \num{123}.
-\nocite{placeholder}
+\section{תחזית פיננסית \en{(Financial Forecast)}}
+
+\subsection{הנחות היסוד}
+כל התחזית מחושבת בסקריפט \code{code/model.py} והיא פתוחה לביקורת. ההנחות העיקריות:
+
+\begin{table}[h]
+\centering
+\caption{הנחות המודל}
+\label{tab:assumptions}
+\small
+\begin{tabularx}{0.92\textwidth}{>{\bfseries}X r}
+\toprule
+\theadrow \thead{הנחה} & \thead{ערך} \\
+\midrule
+הזמנות בחודש הראשון & \num{25} \\
+הזמנות בחודש \num{36} & כ-\num{\MOrdersEnd} \\
+צוות & \num{2} עד חודש \num{12}, \num{3} משם והלאה \\
+עלויות קבועות (שכר, שיווק, שכירות, \en{GPU}, אחר) & \num{48{,}000} עד \num{66{,}000} ש״ח לחודש \\
+השקעה ראשונית & \num{\MInvestment} ש״ח \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+מספר ההזמנות החודשי מתואר בפונקציה סוג־הרוויה
+\begin{equation}
+  N(t) \;=\; N_0 + (N_\infty - N_0)\left(1 - e^{-t/\tau}\right), \qquad N_0=25,\; N_\infty=200,\; \tau=14.
+\end{equation}
+
+\subsection{נקודת איזון}
+נקודת האיזון נגזרת מהנוסחה הקלאסית $Q^{*} = F/(p-v)$, כאשר $F$ העלויות הקבועות החודשיות, $p$ המחיר הממוצע להזמנה ו-$v$ העלות המשתנה הממוצעת. עם תרומה של \num{\MContribPerOrder} ש״ח להזמנה, נדרשות כ-\num{\MBreakEvenOrdersEarly} הזמנות בחודש כדי לכסות את העלויות בשנה הראשונה. המודל מראה רווח תפעולי חודשי חיובי מחודש \num{\MBreakEvenMonth}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/breakeven.pdf}
+\caption{נקודת האיזון: עקומת ההזמנות החודשיות חוצה את הרף $F/(p-v)$ בחודש \num{\MBreakEvenMonth}. הרף קופץ בחודש \num{13} עקב גיוס עובד שלישי.}
+\label{fig:breakeven}
+\end{figure}
+
+\subsection{הכנסות ועלויות}
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.88\textwidth]{figures/revenue_costs.pdf}
+\caption{הכנסות מול עלויות משתנות וקבועות, \num{36} חודשים.}
+\label{fig:revcost}
+\end{figure}
+
+הכנסות השנה הראשונה מסתכמות ב-\num{\MRevenueYearOne} ש״ח, ובשנה השלישית ב-\num{\MRevenueYearThree} ש״ח. הרווח התפעולי בשנה השלישית הוא \num{\MProfitYearThree} ש״ח.
+
+\subsection{תזרים מזומנים והחזר השקעה}
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/cash.pdf}
+\caption{מזומן מצטבר לאחר השקעה ראשונית. ההשקעה מוחזרת בחודש \num{\MPaybackMonth}, ובסוף חודש \num{36} עומד המזומן על \num{\MCashEnd} ש״ח.}
+\label{fig:cash}
+\end{figure}
+
+\subsection{ניתוח רגישות}
+כדי לבדוק עד כמה התוכנית שברירית, שינינו את המחיר ואת היקף ההזמנות בטווח של \num{\pm20}\% ו-\num{\pm40}\% בהתאמה.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.66\textwidth]{figures/sensitivity.pdf}
+\caption{מפת חום של המזומן בתום \num{36} חודשים כפונקציה של מחיר והיקף. בפינה החלשה ביותר (מחיר נמוך ב-\num{20}\% והיקף נמוך ב-\num{40}\%) המזומן שלילי בכ-\num{\MSensWorstLoss} ש״ח.}
+\label{fig:sens}
+\end{figure}
+
+\subsection{סימולציית \en{Monte Carlo}}
+הוספנו אי־ודאות אקראית: המחיר נמשך מהתפלגות נורמלית עם סטיית תקן \num{6}\%, והיקף ההזמנות עם סטיית תקן \num{18}\%. \num{2000} ריצות (עם זרע קבוע לשחזור) מראות שב-\num{\MProbPositive}\% מהתרחישים המזומן המצטבר חיובי בתום \num{36} חודשים. העשירון התחתון עומד על \num{\MMcTen} ש״ח והעליון על \num{\MMcNinety} ש״ח.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\textwidth]{figures/montecarlo.pdf}
+\caption{התפלגות המזומן בתום \num{36} חודשים ב-\num{2000} תרחישים; הקו הצהוב הוא נקודת האפס.}
+\label{fig:mc}
+\end{figure}
+
+\subsection{קטע מהקוד}
+קטע זה מגדיר את פונקציית ההזמנות ואת העלויות הקבועות שמזינות את נקודת האיזון; הוא נטען ישירות מהקובץ המקורי ולכן הוא תמיד מעודכן.
+\begin{english}
+\begin{tcolorbox}[colback=mpaper,colframe=msepia,boxrule=0.5pt,left=4pt,right=4pt,top=2pt,bottom=2pt]
+\lstinputlisting[language=Python,basicstyle=\ttfamily\footnotesize,firstline=44,lastline=53,breaklines=true,numbers=left,numberstyle=\tiny\color{mgrey}]{code/model.py}
+\end{tcolorbox}
+\end{english}

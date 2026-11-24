@@ -1,3 +1,51 @@
-\section{07-risks-privacy}
-Skeleton text. \en{English} \num{123}.
-\nocite{placeholder}
+\section{סיכונים ופרטיות \en{(Risks \& Privacy)}}
+
+\subsection{מפת סיכונים}
+\begin{table}[h]
+\centering
+\caption{מפת סיכונים: הסתברות והשפעה בסולם \num{1--5}}
+\label{tab:risks}
+\small
+\begin{tabularx}{\textwidth}{>{\bfseries}X c c X}
+\toprule
+\theadrow \thead{סיכון} & \thead{הסתברות} & \thead{השפעה} & \thead{התמודדות} \\
+\midrule
+דליפת תמונות לקוחות & \num{2} & \num{5} & הצפנה, הרשאות מינימליות, ביקורת גישה \\
+שחזור ״מזייף״ פרטי פנים & \num{3} & \num{4} & בקרת אדם חובה, שמירת המקור, סימון שחזור \\
+תחרות מאפליקציות חינמיות & \num{4} & \num{3} & בידול באמצעות שירות, ארכיון ופרטיות \\
+קצב הזמנות איטי מהתחזית & \num{3} & \num{4} & עדכון תקציב שיווק, ניתוח רגישות בפרק הקודם \\
+תלות במודלי \en{AI} של צד שלישי & \num{2} & \num{3} & ארכיטקטורה מודולרית, מודלים בקוד פתוח \\
+תביעת זכויות יוצרים & \num{2} & \num{3} & הצהרת בעלות בטופס הקליטה \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[x=1.15cm,y=0.78cm]
+  \foreach \i in {1,...,5} \foreach \j in {1,...,5} {
+    \pgfmathsetmacro{\s}{\i*\j}
+    \ifnum\numexpr\i*\j\relax>14 \fill[mamber!85] (\i-0.5,\j-0.5) rectangle (\i+0.5,\j+0.5);
+    \else\ifnum\numexpr\i*\j\relax>7 \fill[mamber!35] (\i-0.5,\j-0.5) rectangle (\i+0.5,\j+0.5);
+    \else \fill[mteal!15] (\i-0.5,\j-0.5) rectangle (\i+0.5,\j+0.5);\fi\fi
+    \draw[white,line width=1pt] (\i-0.5,\j-0.5) rectangle (\i+0.5,\j+0.5);}
+  \foreach \i/\j/\n in {2/5/1,3/4/2,4/3/3,3/4/4,2/3/5,2/3/6} {
+    \node[circle,fill=mtealdark,text=white,font=\sffamily\tiny\bfseries,inner sep=1.4pt] at (\i-0.18+0.05*\n,\j+0.1-0.05*\n) {\num{\n}};}
+  \node[font=\sffamily\scriptsize,rotate=90] at (-0.2,3) {\en{Impact}};
+  \node[font=\sffamily\scriptsize] at (3,-0.2) {\en{Probability}};
+\end{tikzpicture}
+\caption{מפת חום של הסיכונים. המספרים מתאימים לשורות הטבלה לפי הסדר. הסיכון בעל החשיבות הגבוהה ביותר הוא דליפת תמונות.}
+\label{fig:riskmap}
+\end{figure}
+
+\subsection{פרטיות והגנת מידע}
+תצלומי משפחה הם מידע אישי, ולעיתים מידע על אנשים שאינם הלקוח. לכן נקבעו כללים אלה:
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{הסכמה מדעת}: טופס הסכמה מפורש לכל הזמנה, בהתאם לחוק הגנת הפרטיות \cite{ilprivacy1981} ולעקרונות ה-\en{GDPR} \cite{gdpr2016} (מזעור מידע, הגבלת מטרה, זכות למחיקה).
+  \item \textbf{אין שימוש בתמונות לאימון מודלים}: תמונות לקוחות לא משמשות לשום מטרה מלבד ההזמנה.
+  \item \textbf{אחסון מוצפן} ושמירה לתקופה מוגדרת בחוזה, ומחיקה מאומתת לפי בקשה.
+  \item \textbf{שקיפות}: כל עיבוד \en{AI} מסומן בארכיון; צבע שנוסף על ידי מודל מסומן ככזה.
+\end{enumerate}
+
+\subsection{אתיקה של שחזור}
+שחזור אינו שחזור היסטורי נאמן. מודל מוסיף פרטים שלא היו קיימים, ולכן אנו שומרים תמיד את המקור, מציגים ללקוח את השחזור לצד המקור, ונמנעים משחזור פנים של אנשים שאין בידינו אישור לגביהם. זהו חלק מההבטחה של \en{Memoria}: לשמר זיכרון, לא לשכתב אותו.

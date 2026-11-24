@@ -2,10 +2,13 @@
 \documentclass{memoria}
 \addbibresource{bib/references.bib}
 
+\input{figures/numbers.tex}
+\input{figures/quality.tex}
+
 \begin{document}
 \memoriatitlepage{Memoria}{תוכנית עסקית והצעת מחיר\\ \en{AI Photo Restoration \& Family Archive Studio}}{נובמבר 2026}
 
-\tableofcontents
+{\small\linespread{0.92}\selectfont\tableofcontents}
 \clearpage
 
 \input{chapters/01-executive-summary}
@@ -16,7 +19,9 @@
 \input{chapters/06-gtm-operations}
 \input{chapters/07-risks-privacy}
 \input{chapters/08-conclusion}
+\input{chapters/09-process}
 \input{chapters/A-quote}
+\input{chapters/A-glossary}
 
 \printbibliography[title={ביבליוגרפיה}]
 \end{document}

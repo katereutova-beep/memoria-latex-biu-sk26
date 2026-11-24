@@ -1,0 +1,59 @@
+\section{תהליך ההפקה: צוות סוכנים ובקרת איכות \en{(Production Process)}}
+
+מסמך זה הופק כפרויקט תוכנה: מקורות \en{LaTeX}, תבנית \code{memoria.cls}, קוד פייתון ליצירת הנתונים והגרפים, ובנייה אוטומטית אחת. החלק הזה מתעד איך נעשתה העבודה, כי איכות התוצר נובעת מאיכות התהליך.
+
+\subsection{צוות הסוכנים}
+העבודה חולקה בין חמישה תפקידים. כל תפקיד מוגדר כ-\en{Skill} בקובץ נפרד, והסוכנים מתקשרים ביניהם בהודעות בין חלונות נפרדים של \en{Claude Code}.
+
+\begin{figure}[h]
+\centering
+\begin{english}
+\begin{tikzpicture}[
+  ag/.style={draw=mteal,fill=mpaper,rounded corners=3pt,minimum width=24mm,minimum height=10mm,align=center,font=\sffamily\scriptsize,line width=0.8pt},
+  qa/.style={ag,fill=mamber!25,draw=mamber},
+  arr/.style={-{Stealth[length=2mm]},line width=0.9pt,color=mtealdark},
+  lab/.style={font=\sffamily\tiny,text=msepia,fill=white,inner sep=1pt}]
+  \node[ag] (lead) at (0,0) {Lead\\ orchestrator};
+  \node[ag] (writer) at (-4.6,-2.2) {Writer\\ chapters};
+  \node[ag] (analyst) at (-1.5,-2.2) {Analyst\\ model.py};
+  \node[qa] (det) at (1.6,-2.2) {Detector\\ red team};
+  \node[qa] (fix) at (4.7,-2.2) {Fixer\\ CLS / skills};
+  \draw[arr] (lead) -- node[lab,pos=0.5]{task} (writer);
+  \draw[arr] (lead) -- (analyst);
+  \draw[arr] (lead) -- (det);
+  \draw[arr] (det) -- node[lab]{defects} (fix);
+  \draw[arr,dashed,color=msepia] (fix) to[bend left=35] node[lab,pos=0.5]{fix for review} (det);
+  \draw[arr,dashed,color=msepia] (writer.south) -- ++(0,-5mm) -| (det.south);
+\end{tikzpicture}
+\end{english}
+\caption{צוות הסוכנים: ה-\en{Lead} מחלק משימות; ה-\en{Detector} מוצא תקלות ומבקר גם את התיקונים של ה-\en{Fixer} (ביקורת ״צוות אדום״).}
+\label{fig:agents}
+\end{figure}
+
+\subsection{חוק הברזל: אין תיקון ישיר בטקסט}
+כל תקלה מתוקנת ברמת השורש: בתבנית, בסקיל או בקוד היוצר, ולא בטלאי על הטקסט. כך אותה תקלה לא חוזרת בפרק אחר ובבנייה הבאה. הכלל הזה חייב גם עדכון של גרסת התבנית ושל יומן השינויים.
+
+\subsection{חקר אירועים}
+על כל תקלה שנמצאה נערך חקר אירוע קצר: מה קרה, מהי סיבת השורש, ולמה לא התגלתה קודם. הטבלה מסכמת את התקלות המרכזיות; הפירוט המלא נמצא בקובץ \code{docs/incidents.md}.
+
+\begin{table}[h]
+\centering
+\caption{תקלות מרכזיות שנמצאו ונחקרו}
+\label{tab:incidents}
+\small
+\begin{tabularx}{\textwidth}{>{\bfseries}l X X}
+\toprule
+\theadrow \thead{מזהה} & \thead{תקלה} & \thead{למה לא התגלתה קודם} \\
+\midrule
+\en{I-02} & סדר הפוך של טקסט דו־לשוני בכותרת תחתונה & הבדיקה כיסתה רק את הפרקים ולא מחרוזות של התבנית \\
+\en{I-03} & שם פקודה עם ספרה גרם לשגיאת קומפילציה & לא נבדק הפלט של סקריפט הפייתון לפני הקומפילציה \\
+\en{I-06} & איורי \en{TikZ} נחתכו בקצה העמוד & אזהרות \en{overfull} אינן מופיעות עבור איורים \\
+\en{I-07} & כיתוב טען שהמזומן חיובי בכל הטווח, והמודל הראה אחרת & אין בדיקה שמשווה טענה מילולית למספר מחושב \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+התקלה האחרונה בטבלה (\en{I-07}) חשובה במיוחד, כי היא לא תקלת עימוד אלא תקלת אמינות: טקסט שנכתב מציפייה ולא מנתונים. התיקון הוא כלל מחייב בסקיל \en{qa-table}: כל טענה מספרית במסמך היא מקרו שנוצר על ידי \code{model.py}.
+
+\subsection{ניהול משאבים}
+לשימוש יעיל בטוקנים חילקנו את העבודה בין מודלים: מודל חזק יותר לכתיבה ולתכנון, ומודל זול ומהיר יותר לבדיקות ולמעבר על עמודים. כל שלב מסתיים ב-\en{commit}, כדי שתקלה טכנית לא תאבד עבודה.
