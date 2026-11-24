@@ -36,13 +36,13 @@
 \subsection{דמויות לקוח}
 \begin{figure}[h]
 \centering
-\begin{tikzpicture}[
-  card/.style={draw=mteal,fill=mpaper,rounded corners=4pt,text width=0.30\textwidth,inner sep=7pt,font=\small,line width=0.8pt,align=center}]
+\begin{english}\begin{tikzpicture}[
+  card/.style={draw=mteal,fill=mpaper,rounded corners=4pt,text width=0.27\textwidth,inner sep=7pt,font=\small,line width=0.8pt,align=center}]
   \node[card] (p1) {\textbf{\sffamily רונית, \num{58}}\\ סבתא לשמונה נכדים\\[2pt] רוצה אלבום ליום ההולדת של בעלה. מוכנה לשלם עבור איכות ושקט נפשי.};
   \node[card,right=4mm of p1] (p2) {\textbf{\sffamily דן, \num{47}}\\ מנקה את בית ההורים\\[2pt] מצא שלוש קופסאות תמונות ואינו יודע מי מופיע בהן. מחפש פתרון מקיף.};
   \node[card,right=4mm of p2] (p3) {\textbf{\sffamily ועד הקיבוץ}\\ ארכיון היסטורי\\[2pt] מעוניין בסריקה של \num{800} תמונות ובמטא־נתונים לשימוש ציבורי.};
   \foreach \p in {p1,p2,p3} \fill[mamber] ([yshift=-1.5pt]\p.north west) rectangle ([yshift=0pt]\p.north east);
-\end{tikzpicture}
+\end{tikzpicture}\end{english}
 \caption{שלוש דמויות לקוח מייצגות, מבוססות על הפלחים שהוגדרו. הדמויות בדויות ונועדו לתכנון שירות.}
 \label{fig:personas}
 \end{figure}

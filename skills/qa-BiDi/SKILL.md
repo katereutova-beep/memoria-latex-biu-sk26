@@ -11,3 +11,4 @@ Checks:
 - Currency (₪, $) and percentages keep the number first and the sign on the correct side.
 Method: `grep` chapters for `[A-Za-z]{2,}` outside `\en{}`/`\code{}`/math, then visually verify 3 sample pages.
 Severity: wrong order of a visible phrase = blocker.
+- Two English fragments separated only by a comma or space must be merged into one `\en{}` unit, e.g. write `\en{A, B}` and not `\en{A}, \en{B}`: the neutral punctuation between separate LTR runs is reordered in an RTL paragraph (incident I-11).

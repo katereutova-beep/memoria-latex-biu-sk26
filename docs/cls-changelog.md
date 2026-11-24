@@ -5,3 +5,5 @@
 | 1.0.0 | Initial class: banner, footer, palette, title page, keybox | - |
 | 1.0.1 | Title page spacing; footer and credit line as single LTR units | I-01, I-02 |
 | 1.1.0 | `\Needspace` before sections and subsections; `lstset` without visible spaces; Libertinus Mono bold/italic fall back to regular | I-08 |
+| 1.2.0 | `keybox` uses the standard tcolorbox skin (enhanced TikZ skin drew its frame off-page in RTL) | I-09 |
+| 1.2.1 | `\emergencystretch` for narrow paragraphs and bibliography; PDF-string-safe `\en`/`\num` in bookmarks | overfull hboxes, hyperref warnings |

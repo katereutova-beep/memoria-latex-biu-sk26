@@ -22,7 +22,7 @@
 
 \begin{figure}[h]
 \centering
-\begin{tikzpicture}[x=1.15cm,y=0.78cm]
+\begin{english}\begin{tikzpicture}[x=1.15cm,y=0.78cm]
   \foreach \i in {1,...,5} \foreach \j in {1,...,5} {
     \pgfmathsetmacro{\s}{\i*\j}
     \ifnum\numexpr\i*\j\relax>14 \fill[mamber!85] (\i-0.5,\j-0.5) rectangle (\i+0.5,\j+0.5);
@@ -33,7 +33,7 @@
     \node[circle,fill=mtealdark,text=white,font=\sffamily\tiny\bfseries,inner sep=1.4pt] at (\i-0.18+0.05*\n,\j+0.1-0.05*\n) {\num{\n}};}
   \node[font=\sffamily\scriptsize,rotate=90] at (-0.2,3) {\en{Impact}};
   \node[font=\sffamily\scriptsize] at (3,-0.2) {\en{Probability}};
-\end{tikzpicture}
+\end{tikzpicture}\end{english}
 \caption{מפת חום של הסיכונים. המספרים מתאימים לשורות הטבלה לפי הסדר. הסיכון בעל החשיבות הגבוהה ביותר הוא דליפת תמונות.}
 \label{fig:riskmap}
 \end{figure}

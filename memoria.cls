@@ -1,8 +1,8 @@
 %% memoria.cls -- custom class for the Memoria business plan (Assignment 02, biu-sk26)
 %% Requires LuaLaTeX. Hebrew (RTL) + English (LTR) with one OpenType family.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{memoria}[2026/11/24 v1.1.0 Memoria bilingual report class]
-\newcommand{\memoriaversion}{1.1.0}
+\ProvidesClass{memoria}[2026/11/24 v1.2.1 Memoria bilingual report class]
+\newcommand{\memoriaversion}{1.2.1}
 
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
 \ProcessOptions\relax
@@ -51,7 +51,9 @@
 
 %% ---- language helpers ----------------------------------------------------
 \newcommand{\en}[1]{\textenglish{#1}}          % inline English inside Hebrew
-\newcommand{\num}[1]{\en{#1}}                  % numbers/units stay LTR
+\newcommand{\num}[1]{\en{#1}}
+\setlength{\emergencystretch}{3em}
+\pdfstringdefDisableCommands{\def\en#1{#1}\def\num#1{#1}\def\code#1{#1}}                  % numbers/units stay LTR
 \newcommand{\code}[1]{\en{\texttt{#1}}}
 
 %% ---- headings --------------------------------------------------------------
@@ -85,9 +87,17 @@
 \renewcommand{\sectionmark}[1]{\markboth{#1}{}}
 
 %% ---- boxes -------------------------------------------------------------------
-\newtcolorbox{keybox}[1][]{enhanced,colback=mpaper,colframe=mteal,fonttitle=\sffamily\bfseries,
-  boxrule=0.6pt,arc=2pt,left=8pt,right=8pt,top=6pt,bottom=6pt,
-  borderline west={3pt}{0pt}{mamber},#1}
+% The tcolorbox title bar renders as a detached block in RTL, so the title is typeset
+% inside the box body instead (class v1.2.0, incident I-09).
+\pgfkeys{/memoria/.cd,title/.store in=\keyboxtitle,title/.default=}
+% tcolorbox frames are only drawn correctly in an LTR context, so the box is built inside
+% `english` and its content is switched back to Hebrew.
+\newtcolorbox{keyboxinner}[1][]{colback=mpaper,colframe=mteal,
+  boxrule=0.6pt,leftrule=3.5pt,arc=0pt,left=8pt,right=8pt,top=6pt,bottom=6pt,
+  before upper={\begin{hebrew}\def\keyboxtitle{}\pgfkeys{/memoria/.cd,#1}%
+    \ifx\keyboxtitle\empty\else{\sffamily\bfseries\color{mteal}\keyboxtitle\par}\smallskip\fi},
+  after upper={\end{hebrew}}}
+\newenvironment{keybox}[1][]{\begin{english}\begin{keyboxinner}[#1]}{\end{keyboxinner}\end{english}}
 
 %% ---- tables --------------------------------------------------------------------
 \renewcommand{\arraystretch}{1.25}
