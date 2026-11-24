@@ -16,7 +16,7 @@
 קהילות ואירועים & הרצאות בבתי אבות, קיבוצים ומרכזים קהילתיים & חודשים \num{1--12} \\
 רשתות חברתיות & סרטונים קצרים של שחזור, בהסכמה בלבד \en{(Instagram, Facebook)} & מחודש \num{2} \\
 שותפויות & צלמים, מארגני אירועים, משרדי עורכי דין העוסקים בירושות & מחודש \num{4} \\
-קידום ממומן & \en{Google Ads} על מילות חיפוש כמו ״שחזור תמונות ישנות״ & מחודש \num{7} \\
+קידום ממומן & \en{Google Ads} על מילות חיפוש כמו ״שחזור תמונות ישנות״ & מחודש \num{\MAdsStart} \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -25,11 +25,9 @@
 \begin{figure}[h]
 \centering
 \begin{english}\begin{tikzpicture}[x=0.32cm,y=0.62cm]
-  \foreach \m in {0,6,12,18,24,30,36} { \draw[mgrey!40] (\m,-0.3) -- (\m,5.9); \node[font=\sffamily\tiny,text=mgrey,below] at (\m,-0.3) {\m}; }
+  \foreach \m in {0,6,12,18,24,30,36} { \draw[mgrey!40] (\m,-0.3) -- (\m,7.2); \node[font=\sffamily\tiny,text=mgrey,below] at (\m,-0.3) {\m}; }
   \node[font=\sffamily\tiny,text=mgrey] at (18,-1.5) {month};
-  \foreach \y/\a/\b/\c/\l in {5/0/3/mteal/{Setup and hiring}, 4/2/8/mteal/{Pilot, 30 families}, 3/6/18/mamber/{Local launch}, 2/12/24/msepia/{Third hire, paid ads}, 1/18/36/mtealdark/{Nationwide and B2B}, 0/24/36/mamber/{Archive subscriptions}} {
-    \fill[\c,rounded corners=1pt] (\a,\y) rectangle (\b,\y+0.45);
-    \node[anchor=east,font=\sffamily\scriptsize] at (-0.5,\y+0.22) {\l}; }
+  \input{figures/gantt.tex}
 \end{tikzpicture}\end{english}
 \caption{ציר זמן של \num{36} חודשים: התקופה שבה כל פעילות מתקיימת.}
 \label{fig:timeline}
@@ -38,7 +36,7 @@
 \subsection{ארגון ותפעול}
 \begin{itemize}[leftmargin=*]
   \item \textbf{מייסדת/ים}: מנהל/ת סטודיו ואחראי/ת בקרת איכות (שניהם בחודש הראשון).
-  \item \textbf{שחזור ובקרה}: מומחה/ית לשחזור דיגיטלי; בחודש \num{13} מתווסף מומחה/ית שלישי/ת.
+  \item \textbf{שחזור ובקרה}: מומחה/ית לשחזור דיגיטלי; בחודש \num{\MHireThree} מתווסף מומחה/ית שלישי/ת.
   \item \textbf{תשתית}: סורק שטוח מקצועי, תחנת עבודה עם \en{GPU}, ואחסון מקומי מוצפן בתוספת גיבוי בענן.
   \item \textbf{ספקים חיצוניים}: דפוס לאלבומים, שירות שליחויות, תמיכת ענן.
 \end{itemize}

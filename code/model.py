@@ -56,8 +56,33 @@ TIERS = {  # name: (price per order, variable cost per order, share of orders)
     "Heritage": (2900.0, 780.0, 0.10),
 }
 MONTHS = 36
+HIRE3_MONTH = 13      # third employee starts: salaries and marketing step up in this month
+ADS_MONTH = 7         # paid advertising (Google Ads) starts; chapter 6 channel table
+HOSTING_MONTH = 1     # archive subscription is sold from the first month
 HOSTING_PRICE, HOSTING_COST, HOSTING_ATTACH, CHURN = 19.0, 3.0, 0.30, 0.02
 INVESTMENT = 250_000.0
+
+
+# ---- launch timeline: (label, first month, last month, colour); months are 1-based ----
+GANTT = [
+    ("Setup and hiring", 1, 3, "mteal"),
+    ("Pilot, 30 families", 3, 8, "mteal"),
+    ("Local launch", ADS_MONTH, 18, "mamber"),
+    ("Paid ads", ADS_MONTH, MONTHS, "msepia"),
+    ("Third hire", HIRE3_MONTH, MONTHS, "msepia"),
+    ("Nationwide and B2B", 19, MONTHS, "mtealdark"),
+    ("Archive subscriptions", HOSTING_MONTH, MONTHS, "mamber"),
+]
+
+
+def gantt_tex():
+    """Bars of the launch timeline. Month m occupies the interval [m-1, m] on the axis."""
+    out = []
+    for row, (label, a, b, colour) in enumerate(GANTT):
+        y = len(GANTT) - 1 - row
+        out.append(rf"\fill[{colour},rounded corners=1pt] ({a - 1},{y}) rectangle ({b},{y + 0.45});")
+        out.append(rf"\node[anchor=east,font=\sffamily\scriptsize] at (-0.5,{y + 0.22}) {{{label}}};")
+    return "\n".join(out) + "\n"
 
 
 def orders(t):
@@ -66,8 +91,8 @@ def orders(t):
 
 
 def fixed_costs(t):
-    salaries = np.where(t < 13, 32_000, 48_000)          # 2 then 3 staff
-    marketing = np.where(t < 13, 6_000, 8_000)
+    salaries = np.where(t < HIRE3_MONTH, 32_000, 48_000)          # 2 then 3 staff
+    marketing = np.where(t < HIRE3_MONTH, 6_000, 8_000)
     return salaries + marketing + 4_500 + 3_500 + 2_000  # rent, GPU/software, other
 
 
@@ -79,7 +104,7 @@ def run(price_factor=1.0, volume_factor=1.0):
     customers = np.zeros(MONTHS)
     subs = 0.0
     for i in range(MONTHS):
-        subs = subs * (1 - CHURN) + n[i] * HOSTING_ATTACH
+        subs = subs * (1 - CHURN) + (n[i] * HOSTING_ATTACH if i + 1 >= HOSTING_MONTH else 0.0)
         customers[i] = subs
     revenue = n * avg_price + customers * HOSTING_PRICE
     var = n * avg_var + customers * HOSTING_COST
@@ -198,6 +223,9 @@ def main():
     }
     for n, (p, i) in enumerate(RISKS):
         macros[f"RiskP{chr(97 + n)}"] = str(p); macros[f"RiskI{chr(97 + n)}"] = str(i)
+    (FIG / "gantt.tex").write_text(gantt_tex(), encoding="utf-8")
+    macros.update(HireThree=str(HIRE3_MONTH), TwoStaffUntil=str(HIRE3_MONTH - 1),
+                  AdsStart=str(ADS_MONTH), HostingStart=str(HOSTING_MONTH))
     (FIG / "riskmap.tex").write_text(risk_marker_tex(), encoding="utf-8")
     lines = [f"\\newcommand{{\\M{k}}}{{{v}}}" for k, v in macros.items()]
     (FIG / "numbers.tex").write_text("\n".join(lines) + "\n", encoding="utf-8")
