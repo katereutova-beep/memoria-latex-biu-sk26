@@ -1,8 +1,8 @@
 %% memoria.cls -- custom class for the Memoria business plan (Assignment 02, biu-sk26)
 %% Requires LuaLaTeX. Hebrew (RTL) + English (LTR) with one OpenType family.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{memoria}[2026/11/24 v1.2.1 Memoria bilingual report class]
-\newcommand{\memoriaversion}{1.2.1}
+\ProvidesClass{memoria}[2026/11/24 v1.3.0 Memoria bilingual report class]
+\newcommand{\memoriaversion}{1.3.0}
 
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
 \ProcessOptions\relax
@@ -53,6 +53,7 @@
 \newcommand{\en}[1]{\textenglish{#1}}          % inline English inside Hebrew
 \newcommand{\num}[1]{\en{#1}}
 \setlength{\emergencystretch}{3em}
+\setcounter{tocdepth}{1}                      % compact TOC: chapters only (incident I-15)
 \pdfstringdefDisableCommands{\def\en#1{#1}\def\num#1{#1}\def\code#1{#1}}                  % numbers/units stay LTR
 \newcommand{\code}[1]{\en{\texttt{#1}}}
 
@@ -75,7 +76,7 @@
   \begin{tikzpicture}[remember picture,overlay]
     \fill[mteal] ([yshift=-0.9cm]current page.north west) rectangle ([yshift=-0.0cm]current page.north east);
     \fill[mamber] ([yshift=-1.0cm]current page.north west) rectangle ([yshift=-0.9cm]current page.north east);
-    \node[anchor=east,text=white,font=\sffamily\small\bfseries] at ([xshift=-1.8cm,yshift=-0.45cm]current page.north east) {\en{Memoria}~\textbullet~\leftmark};
+    \node[anchor=east,text=white,font=\sffamily\small\bfseries] at ([xshift=-1.8cm,yshift=-0.45cm]current page.north east) {\en{Memoria}~\textbullet~\memoriahdrtitle};
     \node[anchor=west,text=white,font=\sffamily\footnotesize] at ([xshift=1.8cm,yshift=-0.45cm]current page.north west) {\en{Business Plan \& Quote}};
   \end{tikzpicture}}
 \fancyfoot[C]{%
@@ -84,7 +85,26 @@
   \end{tikzpicture}%
   {\sffamily\footnotesize\color{mgrey}\en{\memoriagroup\ \textbullet\ Assignment 02\ \textbullet\ \thepage}}}
 
-\renewcommand{\sectionmark}[1]{\markboth{#1}{}}
+% Running header = the section that is active at the TOP of the page (incident I-15).
+% Each section writes (page, T/M, title) to the .aux: T if it starts at the top of its page, M if
+% further down. Header: a section that starts at the top of the page, else the section carried over
+% from the previous page. (\leftmark/\topmark alone show the LAST section started on the page.)
+\def\mem@carry{\contentsname}
+\def\mem@sec#1#2#3{%
+  \expandafter\gdef\csname mem@L@#1\endcsname{#3}%
+  \if T#2\ifcsname mem@T@#1\endcsname\else\expandafter\gdef\csname mem@T@#1\endcsname{#3}\fi\fi}
+\renewcommand{\sectionmark}[1]{\markboth{#1}{}%
+  \ifdim\pagetotal<2\baselineskip
+    \protected@write\@auxout{}{\string\mem@sec{\thepage}{T}{#1}}%
+  \else
+    \protected@write\@auxout{}{\string\mem@sec{\thepage}{M}{#1}}%
+  \fi}
+\newcommand{\memoriahdrtitle}{%
+  \ifcsname mem@T@\thepage\endcsname\expandafter\let\expandafter\mem@show\csname mem@T@\thepage\endcsname
+  \else\let\mem@show\mem@carry\fi
+  \mem@show
+  \ifcsname mem@L@\thepage\endcsname\expandafter\global\expandafter\let\expandafter\mem@carry\csname mem@L@\thepage\endcsname\fi}
+\defbibheading{bibliography}[\bibname]{\section*{#1}\sectionmark{#1}}
 
 %% ---- boxes -------------------------------------------------------------------
 % The tcolorbox title bar renders as a detached block in RTL, so the title is typeset
@@ -97,6 +117,8 @@
   before upper={\begin{hebrew}\def\keyboxtitle{}\pgfkeys{/memoria/.cd,#1}%
     \ifx\keyboxtitle\empty\else{\sffamily\bfseries\color{mteal}\keyboxtitle\par}\smallskip\fi},
   after upper={\end{hebrew}}}
+% keep a short block (terms + signature line) on one page
+\newenvironment{keeptogether}{\par\begin{samepage}}{\par\end{samepage}}
 \newenvironment{keybox}[1][]{\begin{english}\begin{keyboxinner}[#1]}{\end{keyboxinner}\end{english}}
 
 %% ---- tables --------------------------------------------------------------------

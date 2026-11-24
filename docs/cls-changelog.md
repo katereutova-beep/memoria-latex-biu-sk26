@@ -7,3 +7,4 @@
 | 1.1.0 | `\Needspace` before sections and subsections; `lstset` without visible spaces; Libertinus Mono bold/italic fall back to regular | I-08 |
 | 1.2.0 | `keybox` uses the standard tcolorbox skin (enhanced TikZ skin drew its frame off-page in RTL) | I-09 |
 | 1.2.1 | `\emergencystretch` for narrow paragraphs and bibliography; PDF-string-safe `\en`/`\num` in bookmarks | overfull hboxes, hyperref warnings |
+| 1.3.0 | Running header shows the section active at the top of the page (aux-based per-page marks, bibliography included); `tocdepth` 1 (compact TOC); `keeptogether` environment | I-15 |
