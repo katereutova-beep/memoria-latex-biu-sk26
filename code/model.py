@@ -203,6 +203,24 @@ def fig_sensitivity():
     save("sensitivity.pdf")
 
 
+# ---- sample customer quote (appendix) and the discount policy of chapter 4 ------------
+FAMILY_DISCOUNT_PCT = 10          # percent, on the package line only
+FAMILY_DISCOUNT_MIN_ORDERS = 3    # applies only ABOVE this many orders of the same family per year
+QUOTE_ORDERS_THIS_YEAR = 1        # the sample quote is the family's first order
+QUOTE_LINES = {                   # key: (quantity, unit price); Heritage package is the package line
+    "Heritage": (1, 2900), "Extra": (12, 95), "Album": (1, 320), "Sub": (12, 19)}
+
+
+def quote():
+    """Line totals and the total of the sample quote. The family discount is applied by policy,
+    so a first order gets none (incident I-18)."""
+    lines = {k: q * p for k, (q, p) in QUOTE_LINES.items()}
+    discount = 0
+    if QUOTE_ORDERS_THIS_YEAR > FAMILY_DISCOUNT_MIN_ORDERS:
+        discount = round(lines["Heritage"] * FAMILY_DISCOUNT_PCT / 100)
+    return lines, discount, sum(lines.values()) - discount
+
+
 def monte_carlo(runs=2000):
     rng = np.random.default_rng(2611)
     end = []
@@ -237,6 +255,12 @@ def main():
     }
     for n, (p, i) in enumerate(RISKS):
         macros[f"RiskP{chr(97 + n)}"] = str(p); macros[f"RiskI{chr(97 + n)}"] = str(i)
+    q_lines, q_discount, q_total = quote()
+    assert q_discount == 0, "the sample quote has no discount line; add one to A-quote.tex if the policy applies"
+    for k, v in q_lines.items():
+        macros[f"Quote{k}"] = fmt(v)
+    macros.update(QuoteTotal=fmt(q_total), FamilyDiscPct=str(FAMILY_DISCOUNT_PCT),
+                  FamilyDiscMin=str(FAMILY_DISCOUNT_MIN_ORDERS))
     macros["UnitRows"] = unit_table_tex().strip()   # \input inside tabularx breaks; a macro does not
     excerpt = inspect.getsource(orders) + "\n\n" + inspect.getsource(fixed_costs).rstrip() + "\n"
     (FIG / "model_excerpt.py").write_text(excerpt, encoding="utf-8")

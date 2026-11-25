@@ -8,3 +8,4 @@ build/
 *.blg
 *.run.xml
 *.bak
+code/__pycache__/
