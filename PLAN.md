@@ -1,6 +1,6 @@
 # PLAN — Memoria report
 
-Original plan with the status verified on 2026-11-25 (commit `6f2d7c6`). The "Executed by" column records who actually did the work, from the session log and git history.
+Original plan with the status verified on 2026-11-25 (commit `6f2d7c6`; `b64ad4c` is a later documentation-only commit). The "Executed by" column records who actually did the work, from the session log and git history.
 
 | Stage | Output | Planned owner | Executed by | Gate | Status |
 |---|---|---|---|---|---|

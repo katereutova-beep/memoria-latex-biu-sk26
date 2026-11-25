@@ -111,3 +111,22 @@ Fixer's terminal, same time: "The detector accepted N-1, N-1b, N-2 and N-3 and f
 
 - Incident log: present, 21 incidents plus L-01, with root cause and why-not-detected columns.
 - "Zero blocking findings": the last detector re-review found no new defects and no open blocker. But no `qa-super` run is recorded, and an inconsistency in the detector's statements about table direction was found afterwards (section 5). **Criterion stays open.**
+
+## 8. Round 3: documentation audit with four new agents (2026-11-25)
+
+Agents: `lead-qa`, `writer-qa`, `detector-qa`, `fixer-qa`, started in terminal tabs in `C:\BIU01\HW2`. The older sessions with the same role names were not used or touched. Scope: documentation, skill and prompt files only (`README.md`, `TODO.md`, `PLAN.md`, `docs/*.md`, `prompts/*.md`, `skills/*/SKILL.md`). No PDF, code, class, chapter or figure was to be changed. Every message is in `prompts/06-qa-cycle-verbatim.md`.
+
+| id | severity | file | finding (by `detector-qa`) | result |
+|---|---|---|---|---|
+| F1 | major | `skills/qa-BiDi/SKILL.md` | the file was corrupted: an escape sequence had swallowed `\num`, so the rule behind I-12 was unreadable | fixed by `fixer-qa`, accepted by `detector-qa` and `writer-qa` |
+| F2 | major | `prompts/agent-roles.md` | claimed skill files were injected automatically; the scripts do not do that | reworded to say what the scripts do; wording softened to "presumed hand-pasted" after the writer's note |
+| F3 | major | `docs/agent-windows.md` | no mention of `agent.ps1`; claimed a window screenshot for `mesh.png`, 20 links, and a lead-forwards flow, none of which matches the record | corrected; the flow marked as plan, 9 lead-to-peer links explained |
+| F4 | minor | `skills/qa-table`, `skills/qa-infra` | rules stated as met although L-01 and the one-author history show they are not | marked "not met in 7 of 11 tables, see L-01" and "open, see TODO" |
+
+Other outcomes: `writer-qa` proofread the changed text and raised four minor points, all applied and re-checked; a fifth nit on the TODO wording was applied afterwards. `lead-qa` reported a scope gate PASS (only allowed files changed, no untracked files after the stray temporary file was removed by `fixer-qa`, `git log -1` still `b64ad4c`). The detector's real audit report is reproduced in `prompts/06-qa-cycle-verbatim.md`.
+
+Limits of this round:
+- `detector-qa` accepted F1 to F4 before the later wording and header edits; it did not re-review those. `writer-qa` checked them.
+- `writer-qa` did not send its proofread to `lead-qa`; `lead-qa` said so and did not guess.
+- The round covers documentation only. It does not address L-01 (table order), the typed numbers, or the PDF.
+- The edits are uncommitted at the time of writing; commit and push need approval.
