@@ -7,3 +7,4 @@ description: Checks project structure, reproducibility and repository contents.
 - Clean-clone build works with the documented command sequence.
 - `.gitignore` excludes aux files but keeps the final PDF; no secrets; no files >10 MB.
 - Both partners have commits; commit messages are meaningful; branch merged via pull.
+- The final PDF `Memoria-biu-sk26.pdf` must equal the latest `main.pdf` (`build.ps1` copies it); compare page counts before shipping (incident I-21).
