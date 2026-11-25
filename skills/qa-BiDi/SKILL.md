@@ -16,3 +16,4 @@ Severity: wrong order of a visible phrase = blocker.
 um{A}, 
 um{B}` and to `\en{A} (
 um{B}`: any two LTR runs separated only by whitespace/punctuation are reordered (incident I-12). `python code/lint_bidi.py` enforces this and is part of `build.ps1`; a hit fails the build. Fix by merging into one unit or placing a Hebrew word between the runs.
+- A sign or percent belongs inside the LTR unit (`\en{±20\%}`), and `\num{A}\%. \num{B}` is the same adjacent-run defect as `\num{A}, \num{B}`; the lint covers `\%` and signs (incident I-19).

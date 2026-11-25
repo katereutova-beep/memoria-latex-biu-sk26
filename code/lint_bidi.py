@@ -15,7 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 ARG = r"\{(?:[^{}]|\{(?:[^{}]|\{[^{}]*\})*\})*\}"          # braces nested up to 3 levels
 CMD = r"\\(?:num|en|code)"
-PAIR = re.compile(CMD + ARG + r"[\s,;:/.\-\u2013()]*" + CMD + ARG)
+PAIR = re.compile(CMD + ARG + r"(?:\\%|%)?[\s,;:/.\-\u2013()]*" + CMD + ARG)
 TABX = re.compile(r"\\begin\{tabularx\}\{[^{}]*\}\{(.*)\}\s*$", re.M)
 
 
@@ -42,6 +42,10 @@ def main():
     for f in sorted((ROOT / "chapters").glob("*.tex")) + [ROOT / "main.tex"]:
         text = f.read_text(encoding="utf-8")
         bad += check_tables(f, text)
+        for m in re.finditer(r"\\num\{\\pm|\\num\{[-+]", text):
+            print(f"{f.relative_to(ROOT)}:{text.count(chr(10), 0, m.start()) + 1}: sign outside the unit, "
+                  r"write \en{±20\%} so the sign stays on the number")
+            bad += 1
         for m in PAIR.finditer(text):
             line = text.count("\n", 0, m.start()) + 1
             print(f"{f.relative_to(ROOT)}:{line}: adjacent LTR runs: {m.group(0)[:70]!r}")
