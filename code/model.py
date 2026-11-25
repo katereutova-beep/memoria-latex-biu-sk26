@@ -5,6 +5,7 @@ Run:  python code/model.py      (from the repository root)
 Outputs: figures/*.pdf and figures/numbers.tex (LaTeX macros used by the chapters).
 Deterministic: no randomness except a seeded Monte-Carlo with seed 2611.
 """
+import inspect
 from pathlib import Path
 import numpy as np
 import matplotlib
@@ -85,7 +86,6 @@ def gantt_tex():
     return "\n".join(out) + "\n"
 
 
-# LST:begin
 def orders(t):
     """Orders per month: ramp from 25 toward 200 (saturating growth)."""
     return 25 + 175 * (1 - np.exp(-t / 14.0))
@@ -95,7 +95,6 @@ def fixed_costs(t):
     salaries = np.where(t < HIRE3_MONTH, 32_000, 48_000)          # 2 then 3 staff
     marketing = np.where(t < HIRE3_MONTH, 6_000, 8_000)
     return salaries + marketing + 4_500 + 3_500 + 2_000  # rent, GPU/software, other
-# LST:end
 
 
 def run(price_factor=1.0, volume_factor=1.0):
@@ -168,6 +167,17 @@ def fig_breakeven(r):
     save("breakeven.pdf")
 
 
+def unit_table_tex():
+    """Body rows of the unit-economics table (chapter 4): price, variable cost, contribution, rate."""
+    f = lambda v: f"{int(round(v)):,}".replace(",", "{,}")
+    rows = []
+    for name, (price, var, _) in TIERS.items():
+        c = price - var
+        rows.append(rf"\en{{{name}}} & \num{{{f(price)}}} & \num{{{f(var)}}} & \num{{{f(c)}}} & "
+                    rf"\num{{{c / price * 100:.0f}}}\% \\")
+    return "\n".join(rows) + "\n"
+
+
 def fig_mix():
     names = list(TIERS)
     rev = [TIERS[k][0] * TIERS[k][2] for k in names]
@@ -225,6 +235,9 @@ def main():
     }
     for n, (p, i) in enumerate(RISKS):
         macros[f"RiskP{chr(97 + n)}"] = str(p); macros[f"RiskI{chr(97 + n)}"] = str(i)
+    macros["UnitRows"] = unit_table_tex().strip()   # \input inside tabularx breaks; a macro does not
+    excerpt = inspect.getsource(orders) + "\n\n" + inspect.getsource(fixed_costs).rstrip() + "\n"
+    (FIG / "model_excerpt.py").write_text(excerpt, encoding="utf-8")
     (FIG / "gantt.tex").write_text(gantt_tex(), encoding="utf-8")
     macros.update(HireThree=str(HIRE3_MONTH), TwoStaffUntil=str(HIRE3_MONTH - 1),
                   AdsStart=str(ADS_MONTH), HostingStart=str(HOSTING_MONTH))

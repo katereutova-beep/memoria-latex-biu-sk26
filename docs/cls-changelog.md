@@ -8,3 +8,4 @@
 | 1.2.0 | `keybox` uses the standard tcolorbox skin (enhanced TikZ skin drew its frame off-page in RTL) | I-09 |
 | 1.2.1 | `\emergencystretch` for narrow paragraphs and bibliography; PDF-string-safe `\en`/`\num` in bookmarks | overfull hboxes, hyperref warnings |
 | 1.3.0 | Running header shows the section active at the top of the page (aux-based per-page marks, bibliography included); `tocdepth` 1 (compact TOC); `keeptogether` environment | I-15 |
+| 1.3.1 | Column type `H`: tabularx `X` typeset as a right-to-left paragraph (all Hebrew table cells) | I-16 |

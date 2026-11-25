@@ -1,8 +1,8 @@
 %% memoria.cls -- custom class for the Memoria business plan (Assignment 02, biu-sk26)
 %% Requires LuaLaTeX. Hebrew (RTL) + English (LTR) with one OpenType family.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{memoria}[2026/11/24 v1.3.0 Memoria bilingual report class]
-\newcommand{\memoriaversion}{1.3.0}
+\ProvidesClass{memoria}[2026/11/24 v1.3.1 Memoria bilingual report class]
+\newcommand{\memoriaversion}{1.3.1}
 
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
 \ProcessOptions\relax
@@ -123,6 +123,10 @@
 
 %% ---- tables --------------------------------------------------------------------
 \renewcommand{\arraystretch}{1.25}
+% H = tabularx X column typeset as a right-to-left paragraph. In a plain X (or l/r) cell the paragraph
+% direction is LTR, which moves leading numbers and final punctuation to the wrong side and
+% flips ranges such as 1--6 (incident I-16). Use H for every cell with Hebrew text.
+\newcolumntype{H}{>{\pardir TRT\textdir TRT}X}
 \newcommand{\thead}[1]{\textbf{\sffamily\color{white}#1}}
 \newcommand{\theadrow}{\rowcolor{mteal}}
 \RequirePackage{colortbl}
