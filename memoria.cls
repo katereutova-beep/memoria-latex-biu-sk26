@@ -1,8 +1,8 @@
 %% memoria.cls -- custom class for the Memoria business plan (Assignment 02, biu-sk26)
 %% Requires LuaLaTeX. Hebrew (RTL) + English (LTR) with one OpenType family.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{memoria}[2026/11/24 v1.3.2 Memoria bilingual report class]
-\newcommand{\memoriaversion}{1.3.2}
+\ProvidesClass{memoria}[2026/11/24 v1.3.3 Memoria bilingual report class]
+\newcommand{\memoriaversion}{1.3.3}
 
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
 \ProcessOptions\relax
@@ -89,12 +89,17 @@
 % Each section writes (page, T/M, title) to the .aux: T if it starts at the top of its page, M if
 % further down. Header: a section that starts at the top of the page, else the section carried over
 % from the previous page. (\leftmark/\topmark alone show the LAST section started on the page.)
+\newif\ifmem@top
 \def\mem@carry{\contentsname}
 \def\mem@sec#1#2#3{%
   \expandafter\gdef\csname mem@L@#1\endcsname{#3}%
   \if T#2\ifcsname mem@T@#1\endcsname\else\expandafter\gdef\csname mem@T@#1\endcsname{#3}\fi\fi}
 \renewcommand{\sectionmark}[1]{\markboth{#1}{}%
-  \ifdim\pagetotal<2\baselineskip
+  % top of page = nothing above the heading AND no float took space at the top (\vsize is reduced by floats)
+  \mem@toptrue
+  \ifdim\pagetotal<2\baselineskip\else\mem@topfalse\fi
+  \ifdim\vsize<\dimexpr\textheight-\baselineskip\relax\mem@topfalse\fi
+  \ifmem@top
     \protected@write\@auxout{}{\string\mem@sec{\thepage}{T}{#1}}%
   \else
     \protected@write\@auxout{}{\string\mem@sec{\thepage}{M}{#1}}%
@@ -104,7 +109,7 @@
   \else\let\mem@show\mem@carry\fi
   \mem@show
   \ifcsname mem@L@\thepage\endcsname\expandafter\global\expandafter\let\expandafter\mem@carry\csname mem@L@\thepage\endcsname\fi}
-\defbibheading{bibliography}[\bibname]{\section*{#1}\sectionmark{#1}}
+\defbibheading{bibliography}[\bibname]{\Needspace*{9\baselineskip}\sectionmark{#1}\section*{#1}}
 
 %% ---- boxes -------------------------------------------------------------------
 % The tcolorbox title bar renders as a detached block in RTL, so the title is typeset
