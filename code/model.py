@@ -186,7 +186,9 @@ def fig_mix():
     plt.figure(figsize=(5.4, 3.2))
     plt.bar(x - w / 2, rev, w, color=TEAL, label="Revenue per average order")
     plt.bar(x + w / 2, con, w, color=AMBER, label="Contribution margin")
-    plt.xticks(x, names); plt.ylabel("ILS per average order"); plt.legend(frameon=False)
+    plt.xticks(x, names); plt.ylabel("ILS per average order")
+    plt.ylim(0, max(rev + con) * 1.35)             # headroom so the legend never overlaps bars (I-17)
+    plt.legend(frameon=False, loc="upper left")
     save("tier_mix.pdf")
 
 
