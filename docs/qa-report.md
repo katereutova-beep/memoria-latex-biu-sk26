@@ -211,3 +211,30 @@ Observations that are not recorded as defects: the first column is on the right 
 3. `qa-super` step 4 was not done with an independent detector (see the method above). Until a separate session confirms this run, the criterion of PRD 6.2 stays open in `TODO.md`.
 4. The informational warnings listed above are unchanged.
 5. Without a TeX installation `model.py` falls back to the default matplotlib font, so the figures would differ in typeface on such a machine.
+
+## 10. Round 5: independent detector review and the resolution of L-02 (2026-11-27)
+
+### 10.1 Independent review of commit 093cef5 (qa-super step 4)
+`detector-qa` (a separate Claude Code session, not the main session) reviewed commit 093cef5 on an immutable copy made with `git archive`, built there, and did not touch the project folder. The task and the report, verbatim, are in `prompts/07-detector-review-verbatim.md`. Result: no blocker, no major finding, three minor findings.
+
+| id | severity | finding | resolution |
+|---|---|---|---|
+| N-1 | minor | the README gave page 4 for the pipeline figure (it is on page 5); the screenshots predated the layout fixes although the text called them current | screenshots rendered again from the current PDF, captions corrected (I-29) |
+| N-2 | minor | on a failed Python or lint step `build.ps1` could print the tail of an old `main.log` | the tail is printed only when `main.log` was written by this build; tested in two copies (I-30) |
+| N-3 | minor | `qa-BiDi` demanded one `\en{}` unit for the header line, which the class does not do | the skill states what the class does (I-31) |
+
+What the detector verified itself (from its report): the build of 093cef5 exits 0 with 16 pages and `main.pdf` equals the final PDF; failure injection for model.py, LuaLaTeX and Biber exits 1 with the sentinel untouched; no page ends with a heading; headers, quote and signature on one page; no `\tiny` left and the changed figures show no overlap at 100 and 130 dpi; the macro values of tables 4, 6 and 11 equal the printed values and the words of the PDF are otherwise unchanged against 8d41a01; the figures regenerate identically; the commit and finding counts in the documentation match. Not covered by the detector: a rebuild on a machine without TeX; the `\tiny` lint case and the "tool not installed" case were not re-run by it (the lint case was run by the main session, see 9.2).
+
+### 10.2 L-02 resolved (finding Q-07)
+Repair rule applied: the cause was that nothing in the toolchain asked for references, so the fix is in the class, the lint and the skills, followed by the text.
+- Class 1.3.5: `\tabref{tab:..}` ("טבלה 4") and `\figref{fig:..}` ("איור 7"), so a reference reads correctly in a Hebrew sentence.
+- `code/lint_bidi.py`: every `tab:` and `fig:` label must be referenced in the chapters, and every reference must point to a label. Negative test in a scratch copy: an unreferenced label and a reference to a missing label were both reported (exit 1).
+- Skills `qa-table` and `qa-img` state the rule and the macros.
+- Text: 25 references for 11 tables and 14 figures, each placed in the sentence that discusses the table or figure (for example "ההשוואה בין החלופות מוצגת בטבלה 1", "התוצאה מוצגת באיור 10"), or in one added sentence where the surrounding text had nothing to attach to. No caption was changed; no table or figure was moved.
+- Recheck after the rebuild: exit 0, 16 pages, no `??` in the PDF text, no undefined reference or citation in the log; page fill 67.3 % at the lowest, no page ends with a heading; pages 3, 5, 9 and 10 were inspected at 85 dpi: the references read in the right order ("בטבלה 1", "(איור 8)", "איור 4, ואיור 5"). 25 labels, 25 references.
+- Content change that comes with L-02: 14 sentences were added or extended in chapters 2 to 7, 9 and the quote appendix (the 25 references); nothing else in the chapters changed.
+
+### 10.3 Status after this round
+- The incident log is at I-31 and L-01 (observation only). L-02 is closed (I-28).
+- Open: the typed values that are not constants of `model.py` (9.5 item 2) and the informational warnings (9.5 item 4); a rebuild without TeX was never tested.
+- PRD 6.2: the independent detector confirmed round 4 (no blocker, no major). The L-02 changes and the three minor fixes of this round were made after that review; their confirmation is recorded in `TODO.md` once a second review of the current commit exists.

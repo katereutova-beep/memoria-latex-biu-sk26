@@ -11,7 +11,8 @@ function Invoke-Step {
     & $Command
     $code = $LASTEXITCODE
     if ($code -ne 0) {
-        if (Test-Path main.log) { Write-Host "--- last lines of main.log"; Get-Content main.log -Tail 12 }
+        # main.log is shown only if this build wrote it; an old log from an earlier run would look like the cause
+        if ((Test-Path main.log) -and ((Get-Item main.log).LastWriteTime -ge $started)) { Write-Host "--- last lines of main.log"; Get-Content main.log -Tail 12 }
         throw "Build step '$Name' failed with exit code $code. The final PDF was not copied."
     }
 }

@@ -4,7 +4,7 @@ description: Checks table alignment, column order in RTL, widths, captions and o
 ---
 # qa-table
 - Column order reads right-to-left in Hebrew tables. Observed on 2026-11-27: the first column is on the right in 4 of 11 tables and on the left in 7 (L-01 in `docs/incidents.md`); a mix of directions alone is not recorded as a defect. Numeric columns right-aligned digits in LTR cells (`\num{}`).
-- Table fits text width (no `Overfull \hbox` from tabularx/longtable); caption above table; each table referenced in text. Status on 2026-11-27: fit, caption position and header rows pass; no table is referenced in the text (0 of 11), open as L-02.
+- Table fits text width (no `Overfull \hbox` from tabularx/longtable); caption above table; each table referenced in text. Every table is referenced in the text with `\tabref{tab:..}` (11 of 11 on 2026-11-27, a reference reads "בטבלה 4" or "(ראו טבלה 4)"); `code/lint_bidi.py` rejects an unreferenced table label and a reference to a missing label (incidents L-02 and I-28).
 - Header row uses `\theadrow` + `\thead{}`; total rows are bold.
 - Values in tables come from `code/model.py` output (`figures/*.tex` snippets), never retyped. Tier prices, costs and shares, the fixed-cost range, head counts, the first-month orders and the quote quantities and unit prices are macros from `model.py` (incident I-27). Typed values that are not model constants (package photo limits, service targets, channel months) remain; see `docs/qa-report.md`.
 - Month numbers and schedules (hire month, ad start, subscription start, Gantt bars) come from the constants in `code/model.py` (`HIRE3_MONTH`, `ADS_MONTH`, `HOSTING_MONTH`, `GANTT`) as macros or generated TikZ; a figure or sentence that retypes them is a defect (incident I-14).

@@ -12,3 +12,4 @@
 | 1.3.2 | `\tabcolsep` 9pt (default 6pt let a wrapped cell touch the next column) | I-17 |
 | 1.3.3 | Header top-of-page test also requires that no float took space at the top (`\vsize`); bibliography heading marks before its heading | I-20 |
 | 1.3.4 | `float` package so a float that directly follows a heading can use `[H]`; compact table of contents moved from `main.tex` into the class (`\tableofcontents` wrapper); removed the unknown option `twoside=false` (the article class only knows `twoside`, so LaTeX warned "Unused global option") | I-23, I-25, warning |
+| 1.3.5 | `\tabref` and `\figref` for cross-references to tables and figures | I-28 |

@@ -21,14 +21,14 @@ Verified on 2026-11-27 (the `qa-super` run, `docs/qa-report.md` section 9): a co
 | Path | Purpose |
 |---|---|
 | `main.tex`, `chapters/*.tex` | main file and one `.tex` per chapter (9 chapters plus the quote and glossary appendices) |
-| `memoria.cls` | custom class: banner, footer, palette, BiDi helpers, column type `H` (**v1.3.4**) |
+| `memoria.cls` | custom class: banner, footer, palette, BiDi helpers, column type `H`, `\tabref`, `\figref` (**v1.3.5**) |
 | `code/model.py`, `code/quality_demo.py` | financial model, figures, generated LaTeX macros and TikZ snippets |
-| `code/lint_bidi.py` | build-time check for adjacent LTR runs, table column specs, `\tiny` and float placement |
+| `code/lint_bidi.py` | build-time check for adjacent LTR runs, table column specs, `\tiny`, float placement and cross-references |
 | `figures/` | generated figures (PDF), `numbers.tex`, `quality.tex`, `gantt.tex`, `riskmap.tex`, `model_excerpt.py` |
 | `bib/references.bib` | IEEE-style bibliography (biber) |
 | `PRD.md`, `PLAN.md`, `TODO.md` | requirements (with expert-committee criteria), work plan with status, task list |
 | `skills/` | ten QA skills (see below) |
-| `prompts/` | prompt record: summaries (01-03), verbatim user prompts (04), verbatim agent messages (05), role prompts |
+| `prompts/` | prompt record: summaries (01-03), verbatim user prompts (04), verbatim agent messages (05), round 3 cycle (06), independent detector review (07), role prompts |
 | `docs/` | `incidents.md`, `qa-report.md`, `cls-changelog.md`, `mesh-check.md`, `agent-windows.md`, `screenshots/` |
 | `build.ps1`, `agent.ps1`, `start-agents.ps1` | build; start one agent session with its initial prompt; open five agent windows |
 | `Memoria-biu-sk26.pdf` | final PDF |
@@ -40,12 +40,12 @@ Verified on 2026-11-27 (the `qa-super` run, `docs/qa-report.md` section 9): a co
 - Sensitivity analysis and a seeded Monte Carlo (2000 runs) show where the plan fails (the worst corner of the sensitivity map is negative).
 
 ## Pages
-Screenshots rendered on 2026-11-25 from the current `main.pdf` (PDF page numbers).
+Screenshots rendered on 2026-11-27 from the current `main.pdf` (PDF page numbers).
 
 | | |
 |---|---|
 | ![pipeline](docs/screenshots/pipeline.png) | ![quality](docs/screenshots/quality.png) |
-| Service pipeline (TikZ), page 4 | Synthetic restoration experiment (PSNR / SSIM), page 6 |
+| Service pipeline (TikZ), page 5 | Synthetic restoration experiment (PSNR / SSIM), page 6 |
 | ![financials](docs/screenshots/financials.png) | ![risks](docs/screenshots/risks.png) |
 | Break-even and revenue/cost, page 9 | Risk map and conclusion, page 13 |
 | ![process](docs/screenshots/process.png) | ![quote](docs/screenshots/quote.png) |
@@ -60,7 +60,8 @@ Table of contents (page 2): [`docs/screenshots/toc.png`](docs/screenshots/toc.pn
 - **QA round 2:** `detector [72ab50]` reported six findings; `fixer [35005a]` fixed them in 11 commits; the detector re-reviewed. Full record: [`docs/qa-report.md`](docs/qa-report.md). The fixer's commits carry the shared git identity.
 - **QA round 3 (documentation audit, 2026-11-25):** four new agents, `lead-qa`, `writer-qa`, `detector-qa` and `fixer-qa`, were started in terminal tabs in `C:\BIU01\HW2` with the role instructions in `prompts/agent-roles.md` and the skills in `skills/`. The older sessions named `lead`, `writer`, `detector` and `fixer` were not used, messaged or closed. `detector-qa` audited the documentation read-only and found four findings (F1 to F4, no blocker); `fixer-qa` fixed them in documentation, skill and prompt files only; `detector-qa` and `writer-qa` re-reviewed; `lead-qa` checked the scope (no PDF, code, class, chapter or figure changed, nothing committed). Record: [`docs/qa-report.md`](docs/qa-report.md) section 8; every message verbatim: [`prompts/06-qa-cycle-verbatim.md`](prompts/06-qa-cycle-verbatim.md).
 - **QA round 4 (`qa-super`, 2026-11-27):** run by the main session alone, without an independent detector. Eight findings (3 major, 5 minor): seven fixed (the build script now stops on a failed step, an orphaned heading, 6 pt text in figures, a class override in `main.tex`, a machine-specific font path, retyped table values, an unknown class option) and one open (L-02). Results, injection tests and the remaining issues: [`docs/qa-report.md`](docs/qa-report.md) section 9.
-- **Incidents:** 27 (I-01 to I-27) plus two known limitations, both open (L-01 table direction, L-02 no references to tables and figures), each with root cause and why it was not detected: [`docs/incidents.md`](docs/incidents.md). CLS history: [`docs/cls-changelog.md`](docs/cls-changelog.md).
+- **QA round 5 (2026-11-27):** `detector-qa`, a separate session, reviewed the qa-super fixes of commit 093cef5 and found no blocker or major problem and three minor ones (page number and stale screenshots, a misleading log tail, a false skill rule), all fixed. L-02 was resolved with `\tabref`/`\figref` (class 1.3.5), a lint and 25 references. Record: [`docs/qa-report.md`](docs/qa-report.md) section 10.
+- **Incidents:** 31 (I-01 to I-31); L-01 (mixed table direction) is kept as an observation and L-02 is closed, each with root cause and why it was not detected: [`docs/incidents.md`](docs/incidents.md). CLS history: [`docs/cls-changelog.md`](docs/cls-changelog.md).
 - **Iron rule:** defects are repaired in the CLS, a skill or the generator, never as a text-only patch.
 
 ### Agent mesh check (PING / PONG)
@@ -82,7 +83,7 @@ Real captures of the Terminal panel of the Claude desktop app, cropped to the ag
 The agents' terminals use the app's terminal font and wrap long lines; the screenshots show real session text. The tab selector of the app did not switch to the `fixer-qa` tab on several attempts; the capture shown was taken on a later attempt.
 
 ## Prompts
-[`prompts/`](prompts): summaries of the first prompts (`01`-`03`), the verbatim user prompts with timestamps extracted from the session log ([`04`](prompts/04-user-prompts-verbatim.md); the complete original kickoff prompt is in [`P01-kickoff-verbatim.md`](prompts/P01-kickoff-verbatim.md)), the messages and launch prompts sent to agents ([`05`](prompts/05-agent-messages-verbatim.md)), and every message of the round 3 cycle ([`06`](prompts/06-qa-cycle-verbatim.md)).
+[`prompts/`](prompts): summaries of the first prompts (`01`-`03`), the verbatim user prompts with timestamps extracted from the session log ([`04`](prompts/04-user-prompts-verbatim.md); the complete original kickoff prompt is in [`P01-kickoff-verbatim.md`](prompts/P01-kickoff-verbatim.md)), the messages and launch prompts sent to agents ([`05`](prompts/05-agent-messages-verbatim.md)), every message of the round 3 cycle ([`06`](prompts/06-qa-cycle-verbatim.md)), and the task and report of the independent detector review of commit 093cef5 ([`07`](prompts/07-detector-review-verbatim.md)).
 
 ## Status and open items
 Topic selection: the topic was selected independently from the assignment's suggested categories (a business plan with a detailed price quote). The students confirm that the lecturer allowed independent topic selection (relayed by the user on 2026-11-27). Explicit lecturer approval is not claimed.
@@ -96,10 +97,11 @@ Collaboration status: both partners have now committed, pushed and pulled. Verif
 Open, not done:
 - Self-assessed grade: not written.
 - Word report form saved as `biu-sk26-ex02.pdf` and individual Moodle submission by each student: not done.
-- PRD 6.2: a `qa-super` run was done on 2026-11-27 (`docs/qa-report.md` section 9) and ended with no open blocker or major finding, but its step 4 (confirmation by an independent `detector`) was not done, so the criterion stays open. PRD FR1 target of 18-22 pages is not met (16 pages, minimum 15).
+- PRD FR1 target of 18-22 pages is not met (16 pages, minimum 15).
 - Table column order: the first column is on the right in Tables 1, 5, 8 and 10 and on the left in the other seven (`docs/incidents.md` L-01; cause not established). A mix of directions alone is not recorded as a defect.
 - Typed numbers that are not constants of `model.py` remain: package photo limits, service targets, channel months, equation constants and the prose of chapters 2, 4, 5, 6 and 8. Tables 4, 6 and 11 now take their model values from macros (I-27).
-- L-02: no table and no figure is referenced in the text (0 of 11 and 0 of 14); not fixed because it changes the wording of the report.
+- L-02 is closed: every table and figure is referenced in the text (25 references, `\tabref` and `\figref`, enforced by the lint); see `docs/qa-report.md` section 10.2.
+- PRD 6.2: `qa-super` was run, the independent `detector-qa` reviewed commit 093cef5 (no blocker, no major, 3 minor, all fixed), but the later L-02 changes and the three minor fixes still need their own independent confirmation before the criterion can be called met.
 - Older agent sessions (`lead`, `writer`, `detector`, `fixer`, origin not established): left running and untouched. The round 3 agents (`*-qa`) are still open until the results are approved.
 
 Notes: the market size is an engineering estimate, not a cited statistic (stated in the text). Persona and customer names in the quote are fictional.

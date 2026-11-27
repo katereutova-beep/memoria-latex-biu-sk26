@@ -1,8 +1,8 @@
 %% memoria.cls -- custom class for the Memoria business plan (Assignment 02, biu-sk26)
 %% Requires LuaLaTeX. Hebrew (RTL) + English (LTR) with one OpenType family.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{memoria}[2026/11/24 v1.3.4 Memoria bilingual report class]
-\newcommand{\memoriaversion}{1.3.4}
+\ProvidesClass{memoria}[2026/11/24 v1.3.5 Memoria bilingual report class]
+\newcommand{\memoriaversion}{1.3.5}
 
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
 \ProcessOptions\relax
@@ -125,6 +125,11 @@
   after upper={\end{hebrew}}}
 % keep a short block (terms + signature line) on one page
 \newenvironment{keeptogether}{\par\begin{samepage}}{\par\end{samepage}}
+
+% Cross-references to floats: write "ב\tabref{tab:x}" or "(ראו \figref{fig:y})". Every table and figure label must be
+% referenced in the text; code/lint_bidi.py enforces it (incident I-28).
+\newcommand{\tabref}[1]{טבלה~\ref{#1}}
+\newcommand{\figref}[1]{איור~\ref{#1}}
 
 % Compact table of contents. This was a local override in main.tex (incident I-25); it belongs to the class.
 \let\memoria@toc\tableofcontents

@@ -11,6 +11,8 @@
 4. Float placement: a table or figure that directly follows a heading must use [H] (float package), otherwise the
    heading can be left alone at the bottom of a page (incident I-23); `[h]` is not allowed anywhere, because LaTeX
    silently replaces it by `[ht]` and prints a warning.
+5. Cross-references: every `\label{tab:..}` and `\label{fig:..}` must be referenced in the text with `\tabref`,
+   `\figref` or `\ref`, and every reference must point to an existing label (incident I-28).
 Run: python code/lint_bidi.py   (exit code 1 when a violation is found)
 """
 import re
@@ -67,8 +69,30 @@ def check_floats_and_sizes(f, text):
     return bad
 
 
+def check_references(files):
+    texts = {f: f.read_text(encoding="utf-8") for f in files}
+    labels = {}
+    for f, t in texts.items():
+        for m in re.finditer(r"\\label\{((?:tab|fig):[^}]*)\}", t):
+            labels[m.group(1)] = (f, t.count("\n", 0, m.start()) + 1)
+    used = set()
+    bad = 0
+    for f, t in texts.items():
+        for m in re.finditer(r"\\(?:tabref|figref|ref|autoref|pageref)\{([^}]*)\}", t):
+            used.add(m.group(1))
+            if m.group(1) not in labels and m.group(1).startswith(("tab:", "fig:")):
+                print(f"{f.relative_to(ROOT)}:{t.count(chr(10), 0, m.start()) + 1}: reference to an unknown label {m.group(1)}")
+                bad += 1
+    for lab, (f, line) in sorted(labels.items()):
+        if lab not in used:
+            print(f"{f.relative_to(ROOT)}:{line}: label {lab} is never referenced in the text")
+            bad += 1
+    return bad
+
+
 def main():
     bad = 0
+    bad += check_references(sorted((ROOT / "chapters").glob("*.tex")))
     for f in sorted((ROOT / "figures").glob("*.tex")):
         bad += check_floats_and_sizes(f, f.read_text(encoding="utf-8"))
     for f in sorted((ROOT / "chapters").glob("*.tex")) + [ROOT / "main.tex"]:
