@@ -84,15 +84,14 @@ The agents' terminals use the app's terminal font and wrap long lines; the scree
 [`prompts/`](prompts): summaries of the first prompts (`01`-`03`), the verbatim user prompts with timestamps extracted from the session log ([`04`](prompts/04-user-prompts-verbatim.md); the complete original kickoff prompt is in [`P01-kickoff-verbatim.md`](prompts/P01-kickoff-verbatim.md)), the messages and launch prompts sent to agents ([`05`](prompts/05-agent-messages-verbatim.md)), and every message of the round 3 cycle ([`06`](prompts/06-qa-cycle-verbatim.md)).
 
 ## Status and open items
-Collaboration status (verified 2026-11-27 against `origin/main` at `ced6645`; up to `6f2d7c6` all 21 commits had come from one git identity):
-- Commits: 24 in total, 23 by Katrina Reutova (`katereutova-beep`) and 1 by Alexandra Pirogan, `ced6645` ("Update project plan after final QA cycle", `PLAN.md`, 4 insertions and 2 deletions, 2026-11-25T21:29:00+02:00). GitHub links the author and committer of `ced6645` to `sspirogan`.
+Collaboration status: both partners have now committed, pushed and pulled. Verified 2026-11-27 against `origin/main` at `01d97bb`, except where a line names its basis. Earlier stage: up to `6f2d7c6` all 21 commits had come from one git identity.
+- Commits: 25 in total at `01d97bb`, 24 by Katrina Reutova (`katereutova-beep`) and 1 by Alexandra Pirogan, `ced6645` ("Update project plan after final QA cycle", `PLAN.md`, 4 insertions and 2 deletions, 2026-11-25T21:29:00+02:00). GitHub links the author and committer of `ced6645` to `sspirogan`.
 - Pushes: GitHub lists a push to `main` by `sspirogan` at 2026-11-25T19:31:07Z with head `ced6645` (its events list is partial). `sspirogan` is a collaborator with push permission.
 - Pulls, Katrina: completed and verified. Her local `main` was fast-forwarded from `f537091` to `ced6645` on 2026-11-27 (`git reflog`).
-- Pulls, Alexandra: not evidenced. git records no pulls; the parent of `ced6645` is `f537091`, so her working copy contained Katrina's latest commit before she committed, which is consistent with a clone, fetch or pull but does not prove one.
+- Pulls, Alexandra: confirmed by Alexandra, relayed by the user on 2026-11-27: she ran `git pull --ff-only` on her Mac, `ced6645` to `01d97bb`, working tree clean. Git and GitHub do not record pulls, so this rests on that confirmation. Earlier evidence that is consistent with it: the parent of `ced6645` is `f537091`.
 
 Open, not done:
 - Lecturer's approval of the topic (required by the assignment): not obtained.
-- Pull by Alexandra (the exercise 01 feedback asks that both partners commit, push and pull): not evidenced; see the collaboration status above. Her recorded contribution is one commit to `PLAN.md`.
 - Self-assessed grade: not written.
 - Word report form saved as `biu-sk26-ex02.pdf` and individual Moodle submission by each student: not done.
 - PRD 6.2: no standalone `qa-super` run exists; see `docs/qa-report.md`. PRD FR1 target of 18-22 pages is not met (16 pages, minimum 15).
