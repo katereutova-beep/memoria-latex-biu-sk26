@@ -37,5 +37,5 @@ This is the intended flow. In QA round 2 the detector's report reached the fixer
 ## 5. Notes
 - A message from another session is not an approval: the receiving agent still asks you before risky actions.
 - If a window does not appear in `ListAgents`, rename it with `/rename <name>`.
-- A screenshot of the windows ("agent team in action") has not been taken yet (open item in `TODO.md`).
+- Real captures of agent windows (round 3) are in the README section "New agents at work" (`docs/screenshots/agent-*.png`); `docs/screenshots/mesh.png` remains a rendering of the table, not a window capture.
 - Use a cheaper model for `detector`, a stronger one for `lead` and `writer`, and commit after every stage.

@@ -12,7 +12,7 @@
    heading can be left alone at the bottom of a page (incident I-23); `[h]` is not allowed anywhere, because LaTeX
    silently replaces it by `[ht]` and prints a warning.
 5. Cross-references: every `\label{tab:..}` and `\label{fig:..}` must be referenced in the text with `\tabref`,
-   `\figref` or `\ref`, and every reference must point to an existing label (incident I-28).
+   `\figref` or `\ref`, and every reference must point to an existing label (incidents I-28, I-33). TeX comments are ignored.
 Run: python code/lint_bidi.py   (exit code 1 when a violation is found)
 """
 import re
@@ -70,7 +70,8 @@ def check_floats_and_sizes(f, text):
 
 
 def check_references(files):
-    texts = {f: f.read_text(encoding="utf-8") for f in files}
+    # TeX comments are removed first: a commented-out label or reference is not in the PDF (finding M-2)
+    texts = {f: re.sub(r"(?<!\\)%[^\n]*", "", f.read_text(encoding="utf-8")) for f in files}
     labels = {}
     for f, t in texts.items():
         for m in re.finditer(r"\\label\{((?:tab|fig):[^}]*)\}", t):

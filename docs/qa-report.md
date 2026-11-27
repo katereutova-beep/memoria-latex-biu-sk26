@@ -238,3 +238,21 @@ Repair rule applied: the cause was that nothing in the toolchain asked for refer
 - The incident log is at I-31 and L-01 (observation only). L-02 is closed (I-28).
 - Open: the typed values that are not constants of `model.py` (9.5 item 2) and the informational warnings (9.5 item 4); a rebuild without TeX was never tested.
 - PRD 6.2: the independent detector confirmed round 4 (no blocker, no major). The L-02 changes and the three minor fixes of this round were made after that review; their confirmation is recorded in `TODO.md` once a second review of the current commit exists.
+
+### 10.4 Second independent review (commit b7a3028) and the final pass
+`detector-qa` reviewed the local commit b7a3028 (L-02 and the fixes of N-1 to N-3) on a `git archive` copy: no blocker, no major, three minor findings. It checked that every one of the 25 references prints the number of the table or figure its sentence discusses (from `main.aux`), that the reading order is right in the rendered pages, that nothing else in the chapters changed against commit 093cef5 (sorted word comparison; the only new factual sentence is "המחירים בטבלה 10 אינם כוללים מע״מ", supported by the quote's row "סה״כ לפני מע״מ"), that the eight screenshots are pixel-identical to fresh renders, and the behaviour of the build log tail and of the lint. The task and the report of this second review are in `prompts/07-detector-review-verbatim.md` (review 2).
+
+| id | severity | finding | resolution |
+|---|---|---|---|
+| M-1 | minor | the sentence after the risk map printed "הטבלה בטבלה 8" (the table named twice) | sentence rewritten, now "טבלה 8 מפרטת ..., ואיור 13 ממקם ..." (I-32) |
+| M-2 | minor | the reference lint counted labels and references inside TeX comments: with the only reference to `fig:timeline` commented out it exited 0 | comments are removed first (I-33). Negative tests after the fix: the commented-out reference is reported (exit 1); a commented-out label is not counted; a real unreferenced label is reported |
+| M-3 | minor | `docs/agent-windows.md` said that no agent-window screenshot had been taken | sentence points to the four captures in the README (I-34) |
+
+Final qa-super pass on the tree after these fixes (checks run by the main session again, not copied from earlier rounds):
+- Build: exit 0, 16 pages, `lint_bidi` 0 violations, no `??` in the PDF text, no `Overfull`, no `Underfull \vbox`, no undefined reference or citation; entries left: 5 `Underfull \hbox` in narrow table cells, biblatex "Language 'hebrew'", "duplicate destination page.1".
+- Page checks (rendered pages): lowest fill 67.3 % (page 15), no page ends with a heading, 15 headers checked.
+- qa-infra: all required files present; ignore rules and secret scan as in 9.4 (no match); 29 commits, 28 by Katrina Reutova and 1 by Alexandra Pirogan; the final PDF equals `main.pdf`; the build-script failure injection of 9.2 was not changed by these edits except the log tail (tested: stale `main.log`, no tail; LuaLaTeX failure, tail shown).
+- qa-cls-version: 1.3.5 in `\memoriaversion`, `\ProvidesClass` and the changelog; no formatting command in `main.tex`.
+- qa-BiDi: lint 0; 4 hits of Latin words outside wrappers, all `\rule` dimensions (false positives); the references were inspected in the rendered pages 3, 5, 9, 10 and 12.
+- qa-table and qa-img: 11 tables and 14 figures, 25 labels and 25 references (counted in the sources, in `main.aux` by the detector, and enforced by the lint); captions above tables; no `\tiny`.
+- qa-code: unchanged since 9.4 (the generators were not edited in this round); the figures were not regenerated differently (the committed figure PDFs are kept, they render identically).
