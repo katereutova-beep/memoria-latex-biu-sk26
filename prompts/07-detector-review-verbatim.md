@@ -1,4 +1,4 @@
-# Independent detector reviews of commits 093cef5 and b7a3028: tasks and reports, verbatim
+# Independent detector reviews of commits 093cef5, b7a3028 and 61942d1: tasks and reports, verbatim
 
 Source: the live log of the main session (`~/.claude/projects/C--BIU01-HW2/*.jsonl`), entries of 2026-11-27. The text is unchanged. Times are UTC. The main session fixed the findings afterwards; see `docs/qa-report.md` section 10.
 
@@ -86,4 +86,62 @@ VERIFIED CORRECT (my own runs)
 10. Documentation counts. `docs/incidents.md` has 31 incidents (I-01 to I-31). The 25 labels and 25 references match qa-report 10.2. The statements about the minor fixes in 10.1 are supported. prompts/07 reproduces my previous report. The prompts/04 diff is only the P36 line added.
 
 PRD 6.2: I agree it must stay open for now. The conditions are almost met. After 093cef5 I have confirmed this commit's changes (L-02, N-1 to N-3) as above. What is still missing is a `qa-super` pass on the final tree with this report as step 4. Fix M-1 and M-2 (both are in this commit's scope), rebuild, and then show that pass in the report. After that I would not object to marking it met, with the typed-values issue (9.5 item 2) kept as a listed open item. Marking it met is your call, not mine. I did not check prompts/06 in detail or the 43-message claim in PLAN.md.
+````
+
+## Review 3: commit 61942d1 (the fixes of review 2, final confirmation)
+
+### Task sent by the main session
+Sent 2026-11-27T15:35:31.238Z to `detector-qa [4d0c68]`.
+
+````
+Third task for detector-qa: final confirmation of local commit 61942d1 (main, not pushed). Read-only, same rules: do not edit, commit or push, do not build inside C:\BIU01\HW2; use git -C C:\BIU01\HW2 archive 61942d1 into a scratch folder.
+It fixes your findings M-1 to M-3 and adds the record of your second review. Check:
+1. M-1: the sentence after the risk map reads correctly in the rendered page 12 (no double noun), and no other reference sentence puts a noun in front of \tabref or \figref (grep the chapters).
+2. M-2: lint_bidi.py ignores TeX comments. Repeat your own cases: a commented-out reference, a commented-out label, an unreferenced label, a reference to a missing label, and try to break it (for example a reference after an escaped percent sign \%, or a comment that contains a label on the same line as a real one).
+3. M-3: docs/agent-windows.md is now true; search the other documentation files for any remaining sentence that says the agent-window screenshots are missing or that L-02 is open.
+4. Rebuild the archive copy: exit 0, 16 pages, no ?? in the text, no regression against the PDF of b7a3028 other than the one rewritten sentence and the version-independent text; main.pdf equals Memoria-biu-sk26.pdf.
+5. prompts/07-detector-review-verbatim.md reproduces your two reports and the two tasks unchanged (compare with what you sent and received). Any statement in README.md, TODO.md, PLAN.md, docs/incidents.md and docs/qa-report.md section 10 that the repository does not support; in particular the PRD 6.2 wording, which must say that the M-1 to M-3 fixes are not yet confirmed until you confirm them now.
+6. A last qa-super pass on this tree from your side (qa-infra, qa-cls-version, qa-typeset, qa-BiDi, qa-table, qa-code, qa-img): list any blocker or major finding, or say that you found none.
+Report at most 6 findings (id, severity, location, evidence, suggested fix), and say plainly what you verified. Then state clearly whether you confirm the fixes M-1 to M-3 and whether, in your judgement, the PRD 6.2 criterion ("qa-super reports zero blocking findings; the incident log lists every defect found by humans with root cause and why it was missed") is met on this tree; the decision to mark it is mine. Send the report with SendMessage to the desktop session (copy the from address of this message).
+````
+
+### Report received from `detector-qa`
+Received 2026-11-27T15:37:59.211Z.
+
+````
+Final review of 61942d1: I confirm M-1, M-2 and M-3. I found no blocker and no major finding, and 2 minor items, neither of which blocks anything. I worked in a git archive copy and touched nothing in C:\BIU01\HW2; git status there is clean.
+
+CONFIRMATIONS
+- M-1 confirmed. Rendered page 12 now reads "טבלה 8 מפרטת את הסיכונים ... ואיור 13 ממקם אותם ...", with no double noun. A grep of every \tabref and \figref in the chapters shows no noun in front of any of them. The previous words are only prefix letters (ב, ו), "(ראו", "(", or a sentence end.
+- M-2 confirmed. lint_bidi.py now strips comments before the check. My scratch cases:
+  - commented-out reference: exit 1, "label fig:timeline is never referenced"
+  - commented-out label: exit 0, correctly not counted
+  - real unreferenced label: exit 1
+  - reference to a missing label: exit 1
+  - reference after an escaped percent (`50\% \figref{..}`): exit 0, correctly still counted
+  - comment containing a label on the same line as a real one: counted correctly
+  - real label whose only reference is in a same-line comment: exit 1, correctly flagged
+- M-3 confirmed. docs/agent-windows.md line 40 now points to the README section and the four agent-*.png captures, and says mesh.png is still a rendering. I searched README, TODO, PLAN, docs and skills for text saying the screenshots are missing or that L-02 is open. The only hits are historical (see the minor findings).
+- Rebuild of 61942d1. Exit 0, 16 pages, and main.pdf equals Memoria-biu-sk26.pdf. No "??" in the text and no "^!" line in the log. The log has 5 Underfull \hbox, the biblatex Hebrew line and the duplicate-destination note, and no Overfull. The sorted word comparison against the PDF of b7a3028 shows exactly two words removed ("בטבלה", "הטבלה") and one added ("טבלה"): the rewritten sentence, and nothing else. The regenerated figure PDFs and numbers.tex, quality.tex, gantt.tex, riskmap.tex and model_excerpt.py are identical to the committed ones.
+- prompts/07 reproduces both of my reports and both tasks, unchanged where I compared them. I compared the opening and closing lines, the three finding rows of report 2 (M-1, M-2, M-3) and the PRD 6.2 closing paragraph.
+- The PRD 6.2 wording in README, TODO and PLAN says the M-1 to M-3 fixes have no review of their own yet. That is accurate until now. With this message that sentence is out of date and should be updated.
+- Counts in the docs match: 34 incident rows (I-01 to I-34), and the incident numbers I-32 to I-34 in qa-report 10.3 match the M-1 to M-3 rows. The 25 labels and 25 references are unchanged.
+
+FINDINGS (minor)
+| id | sev | location | evidence | suggested fix |
+|---|---|---|---|---|
+| P-1 | minor | docs/qa-report.md 10.4 (qa-infra bullet) | It says "29 commits, 28 by Katrina Reutova and 1 by Alexandra Pirogan". The tree 61942d1 has 30 commits (29 and 1) once this commit is counted. 29 and 28 were true before it. | Say "30 commits (29 and 1) at 61942d1", or state "before this commit". |
+| P-2 | minor | TODO.md line 18; docs/qa-report.md 9.3 (Q-07 "open") and 9.4 ("0 of 11, open") | They state "L-02 open" or "0 of 11 referenced". It is historical (the round-4 state) and 10.2 supersedes it, but a reader of TODO.md "Done" sees L-02 open with no note. | Append "(closed in round 5, I-28)" to TODO.md line 18, and a one-line "superseded by section 10" under the 9.3 and 9.4 tables. |
+Edge case, no action needed: the comment-stripping regex treats `\\%` (an escaped backslash followed by a real comment) as an escaped percent, so a reference hidden that way would still count. It is contrived and cannot happen in these chapters.
+
+MY qa-super PASS ON THIS TREE (what I actually ran)
+- qa-infra: all required files are present and the clean build works. The final PDF equals main.pdf. Commits are by two authors. I did not repeat the secret scan or file-size check, and I did not re-run build.ps1 failure injection for 61942d1; I did that on 093cef5 and 61942d1 changed only the log-tail line (tested on b7a3028).
+- qa-cls-version: 1.3.5 in `\memoriaversion`, `\ProvidesClass` and the changelog.
+- qa-typeset: 16 pages, no "??", no Overfull, and page 12 re-rendered and checked. Only one sentence changed, so the pagination of the other pages is unchanged from b7a3028, which I fully checked.
+- qa-BiDi: lint 0 violations; the reference sentence reads in the right order on page 12.
+- qa-table and qa-img: 25 labels and 25 references, no noun in front of a reference macro, and no \tiny.
+- qa-code: regenerated figures and macros identical to the committed ones.
+Blocker or major findings from my pass: none.
+
+PRD 6.2 JUDGEMENT. In my judgement the criterion "qa-super reports zero blocking findings; the incident log lists every defect found by humans with root cause and why it was missed" is met on this tree, with two caveats. First, the pass is split across several sessions, not one run of the orchestrating skill: step 4 (confirmation) was done by me over three reviews, and the other steps by the main session. Second, open items remain and should stay listed: the typed values that are not constants of model.py (9.5 item 2), the mixed table direction L-01 (a skill rule that is knowingly violated, minor), and no rebuild on a machine without TeX. I found no blocker. Marking it is your decision. If you mark it met, name those caveats next to it.
 ````

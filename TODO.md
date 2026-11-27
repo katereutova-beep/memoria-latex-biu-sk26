@@ -15,12 +15,14 @@ Status as verified on 2026-11-25 against commit `6f2d7c6`; `b64ad4c` is a later 
 - [x] QA round 1 by the main session (incidents I-01 to I-11)
 - [x] QA round 2: detector report, 11 fixer commits, detector re-review (`docs/qa-report.md`, incidents I-12 to I-21, L-01)
 - [x] QA round 3 (documentation audit) with four new agents `lead-qa`, `writer-qa`, `detector-qa`, `fixer-qa`: findings F1 to F4 fixed in docs, skills and prompts, re-reviewed, scope gate passed; all messages in `prompts/06-qa-cycle-verbatim.md`, record in `docs/qa-report.md` section 8
-- [x] `qa-super` run on 2026-11-27 by the main session (`docs/qa-report.md` section 9): 8 findings, 7 fixed (incidents I-22 to I-27 and one class warning), L-02 open
+- [x] `qa-super` run on 2026-11-27 by the main session (`docs/qa-report.md` section 9): 8 findings, 7 fixed (incidents I-22 to I-27 and one class warning), L-02 open at that time and closed in round 5 (I-28)
 - [x] `build.ps1` stops at the first failed Python, LuaLaTeX or Biber step and does not copy the final PDF; verified by failure injection in throw-away copies (4 failure cases exit 1 with the PDF untouched, the control copies it); rule added to `qa-infra`
 - [x] Independent review of the qa-super fixes (commit 093cef5) by `detector-qa`: no blocker, no major, 3 minor findings (N-1 to N-3), all fixed (`docs/qa-report.md` section 10.1)
 - [x] L-02 resolved: 25 references to the 11 tables and 14 figures, `\tabref`/`\figref` in class 1.3.5, lint for unreferenced labels, skills updated (incident I-28)
 - [x] Screenshots in `docs/screenshots` rendered again from the current PDF (2026-11-27)
 - [x] Second independent review (commit b7a3028) by `detector-qa`: no blocker, no major, three minor findings (M-1 to M-3), fixed (incidents I-32 to I-34)
+- [x] Third independent review (commit 61942d1) by `detector-qa`: M-1 to M-3 confirmed, no blocker or major, two minor documentation findings (P-1, P-2) fixed (`docs/qa-report.md` section 10.5)
+- [x] PRD 6.2 (`qa-super` with zero blocking findings; incident log with root causes): met on commit 61942d1, caveats: the pass is split over several sessions (the main session ran the checks and fixes, `detector-qa` confirmed them in three reviews) and not one run of the orchestrating skill; the typed values that are not constants of `model.py` remain (`docs/qa-report.md` 9.5 item 2); the mixed table direction (L-01) stays an observation; no rebuild was tried on a machine without TeX (`docs/qa-report.md` section 10.5)
 - [x] Real captures of the four new agents added to the README (`docs/screenshots/agent-*.png`)
 - [x] README with screenshots, regenerated from the current PDF on 2026-11-25
 - [x] Prompts saved: summaries `prompts/01-03`, verbatim user prompts `04`, verbatim agent messages `05`
@@ -35,7 +37,6 @@ Status as verified on 2026-11-25 against commit `6f2d7c6`; `b64ad4c` is a later 
 ## Open: required by the assignment or the PRD
 - [ ] Self-assessed grade chosen and recorded (PRD 6.4; not written)
 - [ ] Fill the Word form and save `biu-sk26-ex02.pdf` (do not submit Word); each partner submits separately in Moodle
-- [ ] PRD 6.2: `qa-super` was run and an independent detector confirmed the fixes of commits 093cef5 and b7a3028 (no blocker or major); the three minor fixes made after b7a3028 (M-1 to M-3) have no independent confirmation yet, so the criterion is not marked met (`docs/qa-report.md` section 10)
 - [ ] PRD FR1 target 18-22 pages; the document has 16 (minimum 15 is met, margin is one page, and the count includes cover, table of contents and bibliography)
 
 ## Open: quality and evidence
@@ -43,6 +44,6 @@ Status as verified on 2026-11-25 against commit `6f2d7c6`; `b64ad4c` is a later 
 - [ ] Typed numbers that are not constants of `model.py` remain (package photo limits, service targets, channel months, equation constants, prose in chapters 2, 4, 5, 6 and 8); tables 4, 6 and 11 now use macros (I-27) (`docs/qa-report.md` section 9.5)
 
 - [ ] Percent-sign placement in the Monte Carlo paragraph not independently verified
-- [ ] No second-agent verification of the fixes M-1 to M-3
+- [ ] No rebuild was tried on a machine without TeX (the figure font falls back to the matplotlib default there)
 - [ ] Peer-to-peer links were not tested by the mesh check (they were exercised in round 3 messages, but there was no dedicated test)
 - [ ] Duplicate agent sessions (four started before the check; origin not established) not closed

@@ -164,7 +164,7 @@ Every case ran in a throw-away copy; a sentinel text stood in place of `Memoria-
 | Q-04 | qa-cls-version | minor | `main.tex` | formatting commands around `\tableofcontents` | the fix of I-04 was put into `main.tex` | fixed (I-25) |
 | Q-05 | qa-code | minor | `code/model.py`, `code/quality_demo.py` | font path built from the user's profile directory; unused import | machine-specific discovery | fixed (I-26); the rendered figures are identical to the committed ones |
 | Q-06 | qa-table | minor | tables 4, 6 and 11 | tier prices, costs and shares, fixed-cost range, head counts, first-month orders, quote quantities and unit prices were typed | values never connected to the generator | fixed for model constants (I-27); the words of the PDF are unchanged |
-| Q-07 | qa-table, qa-img | minor | all tables and figures | 0 of 11 tables and 0 of 14 figures are referenced in the text | captions and labels only | **open** (L-02) |
+| Q-07 | qa-table, qa-img | minor | all tables and figures | 0 of 11 tables and 0 of 14 figures are referenced in the text | captions and labels only | **open** (L-02); closed in round 5, section 10.2 |
 | Q-08 | qa-cls-version | minor | `memoria.cls` | LaTeX warning "Unused global option(s): twoside" | the option `twoside=false` is unknown to the article class | fixed (CLS 1.3.4) |
 
 Observations that are not recorded as defects: the first column is on the right in 4 of 11 tables and on the left in 7 (a mix of directions alone is not a defect, see L-01); `Underfull \hbox` (5) in narrow table cells; the biblatex language and "duplicate destination" warnings, which no skill sets a threshold for.
@@ -195,7 +195,7 @@ Observations that are not recorded as defects: the first column is on the right 
 | qa-BiDi | header line | `\en{Memoria}` and the section title are not one `\en{}` unit as the skill states; it renders correctly on every page (recorded, not changed) |
 | qa-table | caption above the table; header rows; width | 11 of 11; 11 of 11; no overflow |
 | qa-table | total rows bold; values from `model.py` | pass for the two tables with total rows; fixed for model constants (Q-06), other typed values remain (9.5) |
-| qa-table | each table referenced in the text | 0 of 11, open |
+| qa-table | each table referenced in the text | 0 of 11, open (superseded: 11 of 11 since round 5, section 10.2) |
 | qa-code | generators from a copy of the tracked files | pass |
 | qa-code | determinism | two runs give identical `numbers.tex`, `quality.tex`, `gantt.tex`, `riskmap.tex`, `model_excerpt.py` and identical rendered images of all 8 figures; they are also identical to the committed figures |
 | qa-code | absolute or profile paths; unused imports; Hebrew labels | none; none; no Hebrew string in the code, so the figure labels are English |
@@ -203,12 +203,12 @@ Observations that are not recorded as defects: the first column is on the right 
 | qa-img | figures are vector or TikZ; caption and label | 14 of 14; no raster or external image in the sources |
 | qa-img | legibility | matplotlib text 7.6 to 9.3 pt; no `\tiny` left (lint) |
 | qa-img | markers and legends at 100 dpi | all six risk markers visible; the legends of tier mix, break-even, revenue and quality curve do not cover data |
-| qa-img | referenced in the text | 0 of 14, open |
+| qa-img | referenced in the text | 0 of 14, open (superseded: 14 of 14 since round 5, section 10.2) |
 
 ### 9.5 Remaining issues
-1. **L-02**: no table and no figure is referenced in the text. Not fixed; it changes the wording of the report.
+1. **L-02**: no table and no figure is referenced in the text. Not fixed; it changes the wording of the report. [Update: closed in round 5, section 10.2.]
 2. Typed values that are not constants of `model.py`: package photo limits (10 and 50), the service targets of table 2, the channel months of table 7, the validity of the quote, the equation constants N-infinity and tau, and the numbers inside the prose of chapters 2, 4, 5, 6 and 8.
-3. `qa-super` step 4 was not done with an independent detector (see the method above). Until a separate session confirms this run, the criterion of PRD 6.2 stays open in `TODO.md`.
+3. `qa-super` step 4 was not done with an independent detector (see the method above). Until a separate session confirms this run, the criterion of PRD 6.2 stays open in `TODO.md`. [Update: done in round 5, three independent reviews by `detector-qa`, section 10.]
 4. The informational warnings listed above are unchanged.
 5. Without a TeX installation `model.py` falls back to the default matplotlib font, so the figures would differ in typeface on such a machine.
 
@@ -237,7 +237,7 @@ Repair rule applied: the cause was that nothing in the toolchain asked for refer
 ### 10.3 Status after this round
 - The incident log is at I-31 and L-01 (observation only). L-02 is closed (I-28).
 - Open: the typed values that are not constants of `model.py` (9.5 item 2) and the informational warnings (9.5 item 4); a rebuild without TeX was never tested.
-- PRD 6.2: the independent detector confirmed round 4 (no blocker, no major). The L-02 changes and the three minor fixes of this round were made after that review; their confirmation is recorded in `TODO.md` once a second review of the current commit exists.
+- PRD 6.2: marked met on commit 61942d1 after the third review (10.5), with the caveats named there.
 
 ### 10.4 Second independent review (commit b7a3028) and the final pass
 `detector-qa` reviewed the local commit b7a3028 (L-02 and the fixes of N-1 to N-3) on a `git archive` copy: no blocker, no major, three minor findings. It checked that every one of the 25 references prints the number of the table or figure its sentence discusses (from `main.aux`), that the reading order is right in the rendered pages, that nothing else in the chapters changed against commit 093cef5 (sorted word comparison; the only new factual sentence is "המחירים בטבלה 10 אינם כוללים מע״מ", supported by the quote's row "סה״כ לפני מע״מ"), that the eight screenshots are pixel-identical to fresh renders, and the behaviour of the build log tail and of the lint. The task and the report of this second review are in `prompts/07-detector-review-verbatim.md` (review 2).
@@ -251,8 +251,19 @@ Repair rule applied: the cause was that nothing in the toolchain asked for refer
 Final qa-super pass on the tree after these fixes (checks run by the main session again, not copied from earlier rounds):
 - Build: exit 0, 16 pages, `lint_bidi` 0 violations, no `??` in the PDF text, no `Overfull`, no `Underfull \vbox`, no undefined reference or citation; entries left: 5 `Underfull \hbox` in narrow table cells, biblatex "Language 'hebrew'", "duplicate destination page.1".
 - Page checks (rendered pages): lowest fill 67.3 % (page 15), no page ends with a heading, 15 headers checked.
-- qa-infra: all required files present; ignore rules and secret scan as in 9.4 (no match); 29 commits, 28 by Katrina Reutova and 1 by Alexandra Pirogan; the final PDF equals `main.pdf`; the build-script failure injection of 9.2 was not changed by these edits except the log tail (tested: stale `main.log`, no tail; LuaLaTeX failure, tail shown).
+- qa-infra: all required files present; ignore rules and secret scan as in 9.4 (no match); 30 commits at commit 61942d1, 29 by Katrina Reutova and 1 by Alexandra Pirogan; the final PDF equals `main.pdf`; the build-script failure injection of 9.2 was not changed by these edits except the log tail (tested: stale `main.log`, no tail; LuaLaTeX failure, tail shown).
 - qa-cls-version: 1.3.5 in `\memoriaversion`, `\ProvidesClass` and the changelog; no formatting command in `main.tex`.
 - qa-BiDi: lint 0; 4 hits of Latin words outside wrappers, all `\rule` dimensions (false positives); the references were inspected in the rendered pages 3, 5, 9, 10 and 12.
 - qa-table and qa-img: 11 tables and 14 figures, 25 labels and 25 references (counted in the sources, in `main.aux` by the detector, and enforced by the lint); captions above tables; no `\tiny`.
 - qa-code: unchanged since 9.4 (the generators were not edited in this round); the figures were not regenerated differently (the committed figure PDFs are kept, they render identically).
+
+### 10.5 Third independent review (commit 61942d1) and the decision on PRD 6.2
+`detector-qa` reviewed the local commit 61942d1 on a `git archive` copy and confirmed M-1, M-2 and M-3. The task and the report are in `prompts/07-detector-review-verbatim.md` (review 3).
+- M-1: page 12 reads "טבלה 8 מפרטת ..., ואיור 13 ממקם ..."; no other reference has a noun in front of the macro.
+- M-2: the lint ignores comments. Cases run by the detector: a commented-out reference (exit 1), a commented-out label (not counted), an unreferenced label (exit 1), a reference to a missing label (exit 1), a reference after an escaped percent sign (still counted), a comment containing a label on the line of a real one (counted correctly), a real label whose only reference sits in a same-line comment (exit 1). A reference hidden behind an escaped backslash followed by a percent sign would still count; this cannot occur in these chapters.
+- M-3: `docs/agent-windows.md` is true; no other file says that the window screenshots are missing.
+- Rebuild of the archive copy: exit 0, 16 pages, no `??`; against the PDF of b7a3028 exactly the words of the rewritten sentence differ.
+- Its own qa-super pass on the tree: no blocker and no major finding.
+- Two minor findings, both documentation: P-1 (the commit count in 10.4 was one too low once the commit is counted) and P-2 (round 4 entries that still read "L-02 open" without a note). Both fixed: 10.4 states the count at 61942d1, 9.3, 9.4 and 9.5 and `TODO.md` carry an update note.
+
+Decision on PRD 6.2 ("`qa-super` reports zero blocking findings; the incident log lists every defect found by humans with root cause and why it was missed"): marked met. Basis: the checks of all seven skills were run (section 9 and 10.4), no blocker or major finding is open, three independent reviews confirmed the fixes, and `docs/incidents.md` lists 34 incidents with root cause and why they were not detected. The criterion text of `PRD.md` was not changed. Caveats that stay next to the decision: the pass is split over several sessions and is not one run of the orchestrating skill; the typed values that are not constants of `model.py` remain (9.5 item 2); the mixed table direction (L-01) is an observation and the `qa-table` rule on column order is knowingly not met in 7 of 11 tables; no rebuild was tried on a machine without TeX.
