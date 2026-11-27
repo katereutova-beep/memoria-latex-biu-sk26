@@ -19,6 +19,7 @@ Status as verified on 2026-11-25 against commit `6f2d7c6`; `b64ad4c` is a later 
 - [x] README with screenshots, regenerated from the current PDF on 2026-11-25
 - [x] Prompts saved: summaries `prompts/01-03`, verbatim user prompts `04`, verbatim agent messages `05`
 - [x] Repository public on GitHub: https://github.com/katereutova-beep/memoria-latex-biu-sk26 (public, so no sharing step is needed for the lecturer)
+- [x] Topic selected independently from the assignment's suggested categories (a business plan with a detailed price quote). The students confirm that the lecturer allowed independent topic selection (relayed by the user on 2026-11-27); explicit lecturer approval is not claimed.
 - [x] Clean-clone build verified (16 pages, `lint_bidi` 0 violations)
 - [x] Partner commit and push verified on 2026-11-27 at `ced6645`: 24 commits, 23 by Katrina Reutova (`katereutova-beep`) and 1 by Alexandra Pirogan (`ced6645`, `PLAN.md`, 2026-11-25T21:29:00+02:00; GitHub links it to `sspirogan`, a collaborator with push permission; GitHub lists a push by `sspirogan` at 2026-11-25T19:31:07Z). Earlier stage: up to `6f2d7c6` all 21 commits carried one git identity.
 - [x] Pull by Katrina verified on 2026-11-27: local `main` was fast-forwarded from `f537091` to `ced6645` at 15:44:31+02:00 (`git reflog`: "merge origin/main: Fast-forward"; no local commit was lost).
@@ -26,7 +27,6 @@ Status as verified on 2026-11-25 against commit `6f2d7c6`; `b64ad4c` is a later 
 - [x] Both partners have now committed, pushed and pulled. Basis: commits and pushes are visible in git and GitHub (`ced6645` and the push by `sspirogan`, Katrina's commits and pushes); Katrina's pull is in `git reflog`; Alexandra's pull rests on her confirmation.
 
 ## Open: required by the assignment or the PRD
-- [ ] Lecturer approves the topic (the assignment requires approval in advance)
 - [ ] Self-assessed grade chosen and recorded (PRD 6.4; not written)
 - [ ] Fill the Word form and save `biu-sk26-ex02.pdf` (do not submit Word); each partner submits separately in Moodle
 - [ ] PRD 6.2: a `qa-super` run with zero blocking findings; none is recorded (`docs/qa-report.md`, section 7)
