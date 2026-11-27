@@ -1,6 +1,6 @@
 # TODO
 
-Status as verified on 2026-11-25 against commit `6f2d7c6`; `b64ad4c` is a later documentation-only commit. `[x]` means done and checked in the repository or the PDF; `[ ]` means open. Evidence in parentheses.
+Status as verified on 2026-11-25 against commit `6f2d7c6`; `b64ad4c` is a later documentation-only commit. The collaboration items were updated on 2026-11-27 against `origin/main` at `ced6645`. `[x]` means done and checked in the repository or the PDF; `[ ]` means open. Evidence in parentheses.
 
 ## Done
 - [x] Repo, folders, git init (`4ff1796`)
@@ -20,10 +20,12 @@ Status as verified on 2026-11-25 against commit `6f2d7c6`; `b64ad4c` is a later 
 - [x] Prompts saved: summaries `prompts/01-03`, verbatim user prompts `04`, verbatim agent messages `05`
 - [x] Repository public on GitHub: https://github.com/katereutova-beep/memoria-latex-biu-sk26 (public, so no sharing step is needed for the lecturer)
 - [x] Clean-clone build verified (16 pages, `lint_bidi` 0 violations)
+- [x] Partner commit and push verified on 2026-11-27 at `ced6645`: 24 commits, 23 by Katrina Reutova (`katereutova-beep`) and 1 by Alexandra Pirogan (`ced6645`, `PLAN.md`, 2026-11-25T21:29:00+02:00; GitHub links it to `sspirogan`, a collaborator with push permission; GitHub lists a push by `sspirogan` at 2026-11-25T19:31:07Z). Earlier stage: up to `6f2d7c6` all 21 commits carried one git identity.
+- [x] Pull by Katrina verified on 2026-11-27: local `main` was fast-forwarded from `f537091` to `ced6645` at 15:44:31+02:00 (`git reflog`: "merge origin/main: Fast-forward"; no local commit was lost).
 
 ## Open: required by the assignment or the PRD
 - [ ] Lecturer approves the topic (the assignment requires approval in advance)
-- [ ] Both partners commit, push and pull (all 21 commits up to `6f2d7c6` are from one git identity)
+- [ ] Pull by Alexandra: not evidenced. git records no pulls; the parent of `ced6645` is `f537091`, so her working copy contained Katrina's latest commit before she committed (consistent with a clone, fetch or pull; not proof).
 - [ ] Self-assessed grade chosen and recorded (PRD 6.4; not written)
 - [ ] Fill the Word form and save `biu-sk26-ex02.pdf` (do not submit Word); each partner submits separately in Moodle
 - [ ] PRD 6.2: a `qa-super` run with zero blocking findings; none is recorded (`docs/qa-report.md`, section 7)
