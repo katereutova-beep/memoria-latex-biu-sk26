@@ -10,3 +10,4 @@ description: Checks figure placement, frames, captions, resolution and licensing
 - Figures do not float more than one page from their reference.
 - Plotted markers or labels that can share a coordinate (risk map, scatter) must be generated from data with a collision rule (spread by count within the cell), never typed by hand; check at 150 dpi that every numbered marker is visible (incident I-13).
 - Any figure with a legend must reserve headroom for it (set the y-limit from the data); check at 150 dpi that the legend does not cover bars or lines (incident I-17).
+- `\tiny` (6 pt at the 11 pt body size) is forbidden in figure sources, including the generated `figures/*.tex`; use `\scriptsize` (8 pt) or larger. `code/lint_bidi.py` enforces it (incident I-24). Text of the matplotlib figures is 10 pt scaled by included width / native width and must stay at 7 pt or more (smallest value on 2026-11-27: 7.6 pt).

@@ -5,7 +5,6 @@ baseline (box filter, numpy only) and reports PSNR/SSIM-like metrics. It is an h
 illustration of how quality is *measured*; it is not the AI pipeline itself.
 Run: python code/quality_demo.py   -> figures/quality_demo.pdf, quality_curve.pdf, quality.tex
 """
-from pathlib import Path
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")

@@ -4,7 +4,7 @@
 ההכנסות של \en{Memoria} מגיעות משני מקורות: הזמנות חד־פעמיות בשלוש חבילות, ומנוי חודשי אופציונלי לאחסון וגיבוי בענן. מבנה זה מאזן בין הכנסה גבוהה להזמנה לבין הכנסה חוזרת צפויה, ובהתאם לתבנית \en{Business Model Canvas} \cite{osterwalder2010} הוא נשען על תוספת ערך אחרי המכירה ולא רק על המכירה עצמה.
 
 \subsection{חבילות ומחירים}
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \caption{חבילות השירות ומחיריהן (ש״ח, לא כולל מע״מ)}
 \label{tab:tiers}
@@ -13,9 +13,9 @@
 \toprule
 \theadrow \thead{חבילה} & \thead{מה כלול} & \thead{מחיר} & \thead{עלות משתנה} & \thead{נתח הזמנות} \\
 \midrule
-\en{Basic} & עד \num{10} תמונות: סריקה, ניקוי שריטות, הגדלה & \num{390} & \num{85} & \num{55}\% \\
-\en{Pro} & עד \num{10} תמונות: הכול ב-\en{Basic} + שחזור פנים וצביעה + בקרת אדם מורחבת & \num{790} & \num{190} & \num{35}\% \\
-\en{Heritage} & עד \num{50} תמונות, ארכיון עם מטא־נתונים, אלבום מודפס, כונן \en{USB} & \num{2{,}900} & \num{780} & \num{10}\% \\
+\en{Basic} & עד \num{10} תמונות: סריקה, ניקוי שריטות, הגדלה & \num{\MPriceBasic} & \num{\MVarBasic} & \num{\MShareBasic}\% \\
+\en{Pro} & עד \num{10} תמונות: הכול ב-\en{Basic} + שחזור פנים וצביעה + בקרת אדם מורחבת & \num{\MPricePro} & \num{\MVarPro} & \num{\MSharePro}\% \\
+\en{Heritage} & עד \num{50} תמונות, ארכיון עם מטא־נתונים, אלבום מודפס, כונן \en{USB} & \num{\MPriceHeritage} & \num{\MVarHeritage} & \num{\MShareHeritage}\% \\
 \midrule
 \multicolumn{2}{l}{\textbf{ממוצע משוקלל להזמנה}} & \textbf{\num{\MAvgOrderPrice}} & \textbf{\num{\MAvgOrderVar}} & \num{100}\% \\
 \bottomrule
@@ -40,7 +40,7 @@
 \end{equation}
 כאשר $p$ הוא המחיר, $v$ העלות המשתנה ו-$m$ שיעור הרווח הגולמי הרצוי. עבור \en{Basic} מתקבל $m = 1 - 85/390 \approx 78\%$, ועבור \en{Heritage} $m \approx 73\%$. הפער נובע מעלות הדפסה ואריזה של האלבום.
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=0.72\textwidth]{figures/tier_mix.pdf}
 \caption{הכנסה ותרומה להזמנה ממוצעת לפי חבילה: \en{Heritage} מהווה \num{10}\% מההזמנות אך תורמת את החלק הגדול ביותר מההכנסה.}
@@ -50,7 +50,7 @@
 \subsection{כלכלת יחידה לפי חבילה}
 כדי להבין היכן נוצר הערך, פירקנו את מחיר ההזמנה לעלות משתנה ולתרומה. עבור כל שקל הכנסה מ-\en{Basic} נשארים כ-\num{78} אגורות לכיסוי עלויות קבועות ורווח; ב-\en{Heritage} כ-\num{73} אגורות, בגלל עלות ההדפסה והאריזה. התרומה המוחלטת בחבילת \en{Pro} גבוהה פי כמעט \num{2} מזו של \en{Basic}, כלומר \num{600} לעומת \num{305} ש״ח ובשיעור דומה, ולכן היא החבילה שנדחוף בשיווק.
 
-\begin{table}[h]
+\begin{table}[ht]
 \centering
 \caption{כלכלת יחידה (ש״ח להזמנה)}
 \label{tab:unit}

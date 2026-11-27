@@ -130,3 +130,84 @@ Limits of this round:
 - `writer-qa` did not send its proofread to `lead-qa`; `lead-qa` said so and did not guess.
 - The round covers documentation only. It does not address L-01 (table order), the typed numbers, or the PDF.
 - The edits are uncommitted at the time of writing; commit and push need approval.
+
+## 9. Round 4: qa-super run (2026-11-27)
+
+Method: the main session followed `skills/qa-super/SKILL.md`: a clean build, then `qa-infra`, `qa-cls-version`, `qa-typeset`, `qa-BiDi`, `qa-table`, `qa-code` and `qa-img`. Each check was done with a command or by looking at the rendered page; defects were fixed in the build script, the class, the generator or the lint, the project was rebuilt and the checks were repeated. Step 4 of `qa-super` (confirmation by `detector`, repair by `fixer`) was played by the main session: no separate agent confirmed the findings or the fixes. The `*-qa` agents of round 3 were not used. This is the main limit of this run.
+
+### 9.1 Builds
+| Run | Result |
+|---|---|
+| two consecutive builds before the fixes | exit 0, 16 pages, identical text |
+| three builds after the fixes | exit 0, 16 pages, about 30 s each. The first build after the `float` package was added took 531 s, probably a package installation by MiKTeX (not verified) |
+| copy of the tracked files without auxiliary files (control of the failure injection) | exit 0, 16 pages, the same PDF text as the project |
+
+Log after the fixes: no `Overfull \hbox`, no `Underfull \vbox`, no missing glyph, no undefined reference or citation. Remaining entries: `Underfull \hbox` (5, in narrow table cells), biblatex "Language 'hebrew' not supported", pdf backend "duplicate destination page.1".
+
+### 9.2 Failure injection of `build.ps1` (finding Q-01)
+Every case ran in a throw-away copy; a sentinel text stood in place of `Memoria-biu-sk26.pdf`; the project folder was not touched.
+
+| Case | Old script | New script |
+|---|---|---|
+| no failure (control) | exit 0, PDF replaced | exit 0, PDF replaced, 16 pages |
+| syntax error in `code/model.py` | exit 0, PDF replaced | exit 1, PDF untouched ("Build step 'model.py' failed") |
+| undefined macro in a chapter (LuaLaTeX) | exit 0, PDF replaced | exit 1, PDF untouched |
+| corrupt `bib/references.bib` (Biber, exit code 2) | exit 0, PDF replaced | exit 1, PDF untouched |
+| `\tiny` in a chapter (lint) | not run (the lint was new) | exit 1, PDF untouched |
+
+### 9.3 Findings (record format of `qa-super`)
+| id | skill | severity | location | evidence | root cause | status |
+|---|---|---|---|---|---|---|
+| Q-01 | qa-infra | major | `build.ps1` | table above: exit 0 and the final PDF overwritten after a failed Python, LuaLaTeX or Biber step, 3 of 3 cases | exit codes of native commands were ignored | fixed (I-22), verified |
+| Q-02 | qa-typeset | major | PDF page 6, subsection 4.2 | rendering of every page: the last body line of page 6 was a heading, its table was on page 7. A second case, the glossary heading on page 15, appeared while fixing the first | a heading directly followed by a float | fixed (I-23); after the fix no page ends with a heading (checked on 15 pages) |
+| Q-03 | qa-img | major | 9 uses of `\tiny` in 4 chapters and the code listing, 6 in the generated `riskmap.tex` | `\tiny` is 6 pt, the rule is 7 pt | rule not automated | fixed (I-24); lint added; the five figures that changed were inspected at 100 dpi |
+| Q-04 | qa-cls-version | minor | `main.tex` | formatting commands around `\tableofcontents` | the fix of I-04 was put into `main.tex` | fixed (I-25) |
+| Q-05 | qa-code | minor | `code/model.py`, `code/quality_demo.py` | font path built from the user's profile directory; unused import | machine-specific discovery | fixed (I-26); the rendered figures are identical to the committed ones |
+| Q-06 | qa-table | minor | tables 4, 6 and 11 | tier prices, costs and shares, fixed-cost range, head counts, first-month orders, quote quantities and unit prices were typed | values never connected to the generator | fixed for model constants (I-27); the words of the PDF are unchanged |
+| Q-07 | qa-table, qa-img | minor | all tables and figures | 0 of 11 tables and 0 of 14 figures are referenced in the text | captions and labels only | **open** (L-02) |
+| Q-08 | qa-cls-version | minor | `memoria.cls` | LaTeX warning "Unused global option(s): twoside" | the option `twoside=false` is unknown to the article class | fixed (CLS 1.3.4) |
+
+Observations that are not recorded as defects: the first column is on the right in 4 of 11 tables and on the left in 7 (a mix of directions alone is not a defect, see L-01); `Underfull \hbox` (5) in narrow table cells; the biblatex language and "duplicate destination" warnings, which no skill sets a threshold for.
+
+### 9.4 Results per skill after the fixes
+| Skill | Check | Result |
+|---|---|---|
+| qa-infra | required files and every chapter included by `main.tex` | all present |
+| qa-infra | build from a copy of the tracked files | pass (exit 0, 16 pages) |
+| qa-infra | `.gitignore` ignores auxiliary files, keeps `Memoria-biu-sk26.pdf` and `main.pdf` | pass |
+| qa-infra | secrets and size | no match for key, token or password patterns in tracked text files; no credential-like file name; largest tracked file 497 KB |
+| qa-infra | partners, messages, branch | both partners have commits; no commit subject shorter than 20 characters; one branch, `main` |
+| qa-infra | build stops on failure; final PDF equals `main.pdf` | pass (9.2); pass |
+| qa-cls-version | `\memoriaversion` = `\ProvidesClass` = last changelog row | 1.3.4 in all three |
+| qa-cls-version | every commit that touched the class has a changelog row | pass (versions 1.0.0 to 1.3.3 in the history, 1.3.4 in the working tree) |
+| qa-cls-version | no overrides in `main.tex` | pass after Q-04 |
+| qa-typeset | `Overfull \hbox`, `Underfull \vbox` | 0, 0 |
+| qa-typeset | page fill | 67.3 % at the lowest (page 15), 100 % at the highest; before the fixes the lowest was 30.9 % |
+| qa-typeset | orphan headings | none after Q-02 |
+| qa-typeset | `??` in the PDF text; undefined citations | 0; 0 |
+| qa-typeset | page count | 16, inside 15 to 25 and equal to the previous run |
+| qa-typeset | running header | the header of each of the 15 pages names the section active at its top; the glossary page shows "Glossary" because that section starts at its top |
+| qa-typeset | table of contents; quote and signature line | chapters only, one page; the signature line is on the page of the quote |
+| qa-BiDi | `lint_bidi.py`; `Missing character` | 0 violations; 0 |
+| qa-BiDi | Latin words outside `\en{}`, `\code{}` and `\num{}` | 4 hits, all the dimensions of `\rule{4cm}{0.4pt}` (false positives) |
+| qa-BiDi | rendered pages | pages 3, 8, 9 and 15 at 85 dpi, crops of pages 4 to 6 and 11 to 14: no reversed phrase seen |
+| qa-BiDi | currency and percent | no currency symbol is used (amounts are written as a number followed by the word for shekels); 25 `\num{}\%` and 2 `\en{..\%}` forms |
+| qa-BiDi | header line | `\en{Memoria}` and the section title are not one `\en{}` unit as the skill states; it renders correctly on every page (recorded, not changed) |
+| qa-table | caption above the table; header rows; width | 11 of 11; 11 of 11; no overflow |
+| qa-table | total rows bold; values from `model.py` | pass for the two tables with total rows; fixed for model constants (Q-06), other typed values remain (9.5) |
+| qa-table | each table referenced in the text | 0 of 11, open |
+| qa-code | generators from a copy of the tracked files | pass |
+| qa-code | determinism | two runs give identical `numbers.tex`, `quality.tex`, `gantt.tex`, `riskmap.tex`, `model_excerpt.py` and identical rendered images of all 8 figures; they are also identical to the committed figures |
+| qa-code | absolute or profile paths; unused imports; Hebrew labels | none; none; no Hebrew string in the code, so the figure labels are English |
+| qa-code | excerpt generated from the source; listing fits the page | yes (`inspect.getsource`); yes, with the monospace font and a light box (page 11 viewed) |
+| qa-img | figures are vector or TikZ; caption and label | 14 of 14; no raster or external image in the sources |
+| qa-img | legibility | matplotlib text 7.6 to 9.3 pt; no `\tiny` left (lint) |
+| qa-img | markers and legends at 100 dpi | all six risk markers visible; the legends of tier mix, break-even, revenue and quality curve do not cover data |
+| qa-img | referenced in the text | 0 of 14, open |
+
+### 9.5 Remaining issues
+1. **L-02**: no table and no figure is referenced in the text. Not fixed; it changes the wording of the report.
+2. Typed values that are not constants of `model.py`: package photo limits (10 and 50), the service targets of table 2, the channel months of table 7, the validity of the quote, the equation constants N-infinity and tau, and the numbers inside the prose of chapters 2, 4, 5, 6 and 8.
+3. `qa-super` step 4 was not done with an independent detector (see the method above). Until a separate session confirms this run, the criterion of PRD 6.2 stays open in `TODO.md`.
+4. The informational warnings listed above are unchanged.
+5. Without a TeX installation `model.py` falls back to the default matplotlib font, so the figures would differ in typeface on such a machine.

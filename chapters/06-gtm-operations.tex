@@ -3,7 +3,7 @@
 \subsection{ערוצי רכישת לקוחות}
 בשלב הראשון אנו נשענים על ערוצים זולים ובעלי אמון גבוה, ורק בהמשך עוברים לפרסום ממומן.
 
-\begin{table}[h]
+\begin{table}[ht]
 \centering
 \caption{ערוצי שיווק ותפקידם}
 \label{tab:channels}
@@ -22,11 +22,11 @@
 \end{table}
 
 \subsection{לוח זמנים להשקה}
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \begin{english}\begin{tikzpicture}[x=0.32cm,y=0.62cm]
-  \foreach \m in {0,6,12,18,24,30,36} { \draw[mgrey!40] (\m,-0.3) -- (\m,7.2); \node[font=\sffamily\tiny,text=mgrey,below] at (\m,-0.3) {\m}; }
-  \node[font=\sffamily\tiny,text=mgrey] at (18,-1.5) {month};
+  \foreach \m in {0,6,12,18,24,30,36} { \draw[mgrey!40] (\m,-0.3) -- (\m,7.2); \node[font=\sffamily\scriptsize,text=mgrey,below] at (\m,-0.3) {\m}; }
+  \node[font=\sffamily\scriptsize,text=mgrey] at (18,-1.5) {month};
   \input{figures/gantt.tex}
 \end{tikzpicture}\end{english}
 \caption{ציר זמן של \num{36} חודשים: התקופה שבה כל פעילות מתקיימת.}

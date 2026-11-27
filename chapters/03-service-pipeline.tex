@@ -3,7 +3,7 @@
 \subsection{סקירת התהליך}
 התהליך מורכב משישה שלבים. כל שלב מייצר תוצר ביניים הנשמר בארכיון, כך שאפשר לחזור אחורה ולהשוות מקור מול תוצאה.
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \centering
 \begin{english}\begin{tikzpicture}[
   node distance=4mm,
@@ -17,7 +17,7 @@
   \node[pstep,right=of d] (e) {Archive\\ and metadata};
   \node[pstep,right=of e] (f) {Delivery};
   \foreach \x/\y in {a/b,b/c,c/d,d/e,e/f} \draw[arr] (\x) -- (\y);
-  \draw[arr,dashed,color=msepia] (d.south) -- ++(0,-8mm) -| node[pos=0.25,below,font=\sffamily\tiny]{rework loop} (c.south);
+  \draw[arr,dashed,color=msepia] (d.south) -- ++(0,-8mm) -| node[pos=0.25,below,font=\sffamily\scriptsize]{rework loop} (c.south);
 \end{tikzpicture}\end{english}
 \caption{תהליך העבודה של \en{Memoria}. השלב הצהוב הוא בקרת אדם; החץ המקווקו מציין חזרה לשחזור מחדש.}
 \label{fig:pipeline}
@@ -37,7 +37,7 @@
 \paragraph{מסירה.} הלקוח מקבל קישור מוצפן להורדה, כונן \en{USB} ואלבום מודפס בחבילת \en{Heritage}. הגיבוי נשמר בענן לתקופה שנקבעה בחוזה.
 
 \subsection{מדדי איכות}
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \caption{מדדי שירות מתוכננים}
 \label{tab:sla}
@@ -66,14 +66,14 @@
 \end{equation}
 מדדים אלה דורשים תמונת ייחוס נקייה, שאין לנו בתצלומים אמיתיים. לכן ביצענו ניסוי סינתטי: יצרנו בקוד ״תצלום״ מלאכותי, הוספנו רעש וקווי שריטה, והפעלנו מסנן קלאסי פשוט (חציון אופקי וטשטוש ממוצע). זהו קו בסיס ולא המודל שלנו; הוא נועד להדגים כיצד נמדד שיפור. ה-\en{PSNR} עלה מ-\num{\QPsnrBefore}\,\en{dB} ל-\num{\QPsnrAfter}\,\en{dB}, וה-\en{SSIM} הגלובלי מ-\num{\QSsimBefore} ל-\num{\QSsimAfter}.
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=\textwidth]{figures/quality_demo.pdf}
 \caption{ניסוי סינתטי: מקור, גרסה פגועה ותוצאת מסנן קלאסי. כל התמונות נוצרו בקוד (\code{code/quality\_demo.py}) ללא תמונות חיצוניות.}
 \label{fig:qdemo}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=0.72\textwidth]{figures/quality_curve.pdf}
 \caption{שיפור \en{PSNR} של קו הבסיס הקלאסי כפונקציה של עוצמת הרעש. ככל שהרעש חזק יותר, השיפור המוחלט קטן, ולכן שחזור קשה דורש מודלים מתקדמים ובקרת אדם.}
@@ -85,7 +85,7 @@
 \subsection{מסע הלקוח}
 כדי שהשירות יהיה חלק, מיפינו את מסע הלקוח משלב הגילוי ועד המסירה. בכל שלב הגדרנו נקודת מגע, רגש צפוי של הלקוח והתגובה שלנו.
 
-\begin{table}[h]
+\begin{table}[ht]
 \centering
 \caption{מסע הלקוח: נקודות מגע ותגובת השירות}
 \label{tab:journey}

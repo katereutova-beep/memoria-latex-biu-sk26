@@ -5,19 +5,19 @@
 \subsection{צוות הסוכנים}
 העבודה חולקה בין חמישה תפקידים. כל תפקיד מוגדר כ-\en{Skill} בקובץ נפרד, והסוכנים מתקשרים ביניהם בהודעות בין חלונות נפרדים של \en{Claude Code}.
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \centering
 \begin{english}
 \begin{tikzpicture}[
   ag/.style={draw=mteal,fill=mpaper,rounded corners=3pt,minimum width=24mm,minimum height=10mm,align=center,font=\sffamily\scriptsize,line width=0.8pt},
   qa/.style={ag,fill=mamber!25,draw=mamber},
   arr/.style={-{Stealth[length=2mm]},line width=0.9pt,color=mtealdark},
-  lab/.style={font=\sffamily\tiny,text=msepia,fill=white,inner sep=1pt}]
+  lab/.style={font=\sffamily\scriptsize,text=msepia,fill=white,inner sep=1pt}]
   \node[ag] (lead) at (0,0) {Lead\\ orchestrator};
-  \node[ag] (writer) at (-4.6,-2.2) {Writer\\ chapters};
-  \node[ag] (analyst) at (-1.5,-2.2) {Analyst\\ model.py};
-  \node[qa] (det) at (1.6,-2.2) {Detector\\ red team};
-  \node[qa] (fix) at (4.7,-2.2) {Fixer\\ CLS / skills};
+  \node[ag] (writer) at (-5.4,-2.2) {Writer\\ chapters};
+  \node[ag] (analyst) at (-1.8,-2.2) {Analyst\\ model.py};
+  \node[qa] (det) at (1.8,-2.2) {Detector\\ red team};
+  \node[qa] (fix) at (5.4,-2.2) {Fixer\\ CLS / skills};
   \draw[arr] (lead) -- node[lab,pos=0.5]{task} (writer);
   \draw[arr] (lead) -- (analyst);
   \draw[arr] (lead) -- (det);
@@ -36,7 +36,7 @@
 \subsection{חקר אירועים}
 על כל תקלה שנמצאה נערך חקר אירוע קצר: מה קרה, מהי סיבת השורש, ולמה לא התגלתה קודם. הטבלה מסכמת את התקלות המרכזיות; הפירוט המלא נמצא בקובץ \code{docs/incidents.md}.
 
-\begin{table}[h]
+\begin{table}[ht]
 \centering
 \caption{תקלות מרכזיות שנמצאו ונחקרו}
 \label{tab:incidents}

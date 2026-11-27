@@ -1,12 +1,12 @@
 %% memoria.cls -- custom class for the Memoria business plan (Assignment 02, biu-sk26)
 %% Requires LuaLaTeX. Hebrew (RTL) + English (LTR) with one OpenType family.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{memoria}[2026/11/24 v1.3.3 Memoria bilingual report class]
-\newcommand{\memoriaversion}{1.3.3}
+\ProvidesClass{memoria}[2026/11/24 v1.3.4 Memoria bilingual report class]
+\newcommand{\memoriaversion}{1.3.4}
 
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{article}}
 \ProcessOptions\relax
-\LoadClass[11pt,a4paper,twoside=false]{article}
+\LoadClass[11pt,a4paper]{article}
 
 \RequirePackage{iftex}
 \ifluatex\else\ClassError{memoria}{LuaLaTeX is required}{Compile with lualatex.}\fi
@@ -46,6 +46,7 @@
 \RequirePackage{etoc}
 \RequirePackage{needspace}
 \RequirePackage{etoolbox}
+\RequirePackage{float}   % [H] keeps a heading together with the float that follows it (incident I-23)
 \RequirePackage[backend=biber,style=ieee,sorting=none]{biblatex}
 \RequirePackage[hidelinks,colorlinks=true,linkcolor=mteal,urlcolor=mteal,citecolor=mteal]{hyperref}
 
@@ -124,6 +125,10 @@
   after upper={\end{hebrew}}}
 % keep a short block (terms + signature line) on one page
 \newenvironment{keeptogether}{\par\begin{samepage}}{\par\end{samepage}}
+
+% Compact table of contents. This was a local override in main.tex (incident I-25); it belongs to the class.
+\let\memoria@toc\tableofcontents
+\renewcommand{\tableofcontents}{{\small\linespread{0.92}\selectfont\memoria@toc}\bigskip}
 \newenvironment{keybox}[1][]{\begin{english}\begin{keyboxinner}[#1]}{\end{keyboxinner}\end{english}}
 
 %% ---- tables --------------------------------------------------------------------

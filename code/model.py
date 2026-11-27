@@ -6,6 +6,8 @@ Outputs: figures/*.pdf and figures/numbers.tex (LaTeX macros used by the chapter
 Deterministic: no randomness except a seeded Monte-Carlo with seed 2611.
 """
 import inspect
+import shutil
+import subprocess
 from pathlib import Path
 import numpy as np
 import matplotlib
@@ -21,9 +23,20 @@ FIG.mkdir(exist_ok=True)
 TEAL, TEAL_D, AMBER, SEPIA, PAPER, INK, GREY = (
     "#0B5563", "#073B45", "#E0A030", "#8A6A4B", "#FBF6EC", "#1F2A30", "#6B7780")
 
-for p in Path.home().glob("AppData/Local/Programs/MiKTeX/fonts/opentype/public/libertinus-fonts/*Sans-Regular.otf"):
-    font_manager.fontManager.addfont(str(p))
-    plt.rcParams["font.family"] = font_manager.FontProperties(fname=str(p)).get_name()
+def libertinus_sans():
+    """Path of Libertinus Sans from the TeX installation (kpsewhich), so the figures use the document font on any
+    machine. Returns None when TeX or the font is not found; matplotlib then keeps its default font (incident I-26)."""
+    exe = shutil.which("kpsewhich")
+    if not exe:
+        return None
+    found = subprocess.run([exe, "LibertinusSans-Regular.otf"], capture_output=True, text=True).stdout.strip()
+    return found if found and Path(found).exists() else None
+
+
+FONT_FILE = libertinus_sans()
+if FONT_FILE:
+    font_manager.fontManager.addfont(FONT_FILE)
+    plt.rcParams["font.family"] = font_manager.FontProperties(fname=FONT_FILE).get_name()
 plt.rcParams.update({
     "axes.facecolor": PAPER, "figure.facecolor": "white", "axes.edgecolor": GREY,
     "axes.labelcolor": INK, "xtick.color": INK, "ytick.color": INK, "text.color": INK,
@@ -44,8 +57,8 @@ def risk_marker_tex():
     out = []
     for (p, i), ids in cells.items():
         for k, n in enumerate(ids):
-            dx = (k - (len(ids) - 1) / 2) * 0.30
-            out.append(r"\node[circle,fill=mtealdark,text=white,font=\sffamily\tiny\bfseries,"
+            dx = (k - (len(ids) - 1) / 2) * 0.40
+            out.append(r"\node[circle,fill=mtealdark,text=white,font=\sffamily\scriptsize\bfseries,"
                        rf"inner sep=1.4pt] at ({p + dx:.2f},{i}) {{\num{{{n}}}}};")
     return "\n".join(out) + "\n"
 
@@ -58,6 +71,7 @@ TIERS = {  # name: (price per order, variable cost per order, share of orders)
 }
 MONTHS = 36
 HIRE3_MONTH = 13      # third employee starts: salaries and marketing step up in this month
+STAFF_BEFORE, STAFF_AFTER = 2, 3   # head counts that the salary figures in fixed_costs() stand for
 ADS_MONTH = 7         # paid advertising (Google Ads) starts; chapter 6 channel table
 HOSTING_MONTH = 1     # archive subscription is sold from the first month
 HOSTING_PRICE, HOSTING_COST, HOSTING_ATTACH, CHURN = 19.0, 3.0, 0.30, 0.02
@@ -261,6 +275,13 @@ def main():
         macros[f"Quote{k}"] = fmt(v)
     macros.update(QuoteTotal=fmt(q_total), FamilyDiscPct=str(FAMILY_DISCOUNT_PCT),
                   FamilyDiscMin=str(FAMILY_DISCOUNT_MIN_ORDERS))
+    for name, (price, var, share) in TIERS.items():      # tier table values come from here, not from the chapter
+        macros[f"Price{name}"] = fmt(price); macros[f"Var{name}"] = fmt(var); macros[f"Share{name}"] = str(int(round(share * 100)))
+    for k, (qty, unit) in QUOTE_LINES.items():
+        macros[f"Quote{k}Qty"] = str(qty); macros[f"Quote{k}Unit"] = fmt(unit)
+    all_fixed = fixed_costs(np.arange(1, MONTHS + 1))
+    macros.update(FixedMin=fmt(all_fixed.min()), FixedMax=fmt(all_fixed.max()), StaffBefore=str(STAFF_BEFORE),
+                  StaffAfter=str(STAFF_AFTER), OrdersStart=str(int(round(float(orders(0.0))))))
     macros["UnitRows"] = unit_table_tex().strip()   # \input inside tabularx breaks; a macro does not
     excerpt = inspect.getsource(orders) + "\n\n" + inspect.getsource(fixed_costs).rstrip() + "\n"
     (FIG / "model_excerpt.py").write_text(excerpt, encoding="utf-8")

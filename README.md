@@ -13,17 +13,17 @@ A business plan and customer price quote for **Memoria**, a studio that restores
 ```powershell
 powershell -File build.ps1
 ```
-`build.ps1` runs, in order: `code/lint_bidi.py` (fails the build on adjacent LTR runs in Hebrew text), `code/model.py`, `code/quality_demo.py`, then `lualatex` → `biber` → `lualatex` ×2, prints selected log warnings and the page count, and finally copies `main.pdf` to `Memoria-biu-sk26.pdf`. Requires MiKTeX/LuaLaTeX and Python 3 with `matplotlib` and `numpy`.
+`build.ps1` runs, in order: `code/model.py`, `code/quality_demo.py`, `code/lint_bidi.py` (fails on adjacent LTR runs in Hebrew text, table column specs, `\tiny`, and float placement after headings), then `lualatex` → `biber` → `lualatex` ×2. It stops at the first step whose exit code is not zero and then does not copy the PDF; after a successful run it prints selected log warnings and the page count and copies `main.pdf` to `Memoria-biu-sk26.pdf`. Requires MiKTeX/LuaLaTeX and Python 3 with `matplotlib` and `numpy`.
 
-Verified on 2026-11-25 by building a fresh clone of `origin/main` at commit `6f2d7c6` (`b64ad4c` is a later documentation-only commit): the build succeeds, `lint_bidi` reports 0 violations, 16 pages. Remaining warnings in that log: `Underfull \hbox` (5), `'h' float specifier changed to 'ht'` (13), biblatex "Language 'hebrew' not supported", hyperref "duplicate destination page.1", "Unused global option(s)". There are no `Overfull \hbox` warnings and no missing glyphs.
+Verified on 2026-11-27 (the `qa-super` run, `docs/qa-report.md` section 9): a copy of the tracked files without auxiliary files builds with exit code 0 to 16 pages, `lint_bidi` reports 0 violations, and failure injection shows that a failed Python, LuaLaTeX or Biber step stops the build and leaves the final PDF untouched. Remaining log entries: `Underfull \hbox` (5, in narrow table cells), biblatex "Language 'hebrew' not supported", hyperref "duplicate destination page.1". There are no `Overfull \hbox` warnings, no missing glyphs and no float-specifier warnings.
 
 ## Project structure
 | Path | Purpose |
 |---|---|
 | `main.tex`, `chapters/*.tex` | main file and one `.tex` per chapter (9 chapters plus the quote and glossary appendices) |
-| `memoria.cls` | custom class: banner, footer, palette, BiDi helpers, column type `H` (**v1.3.3**) |
+| `memoria.cls` | custom class: banner, footer, palette, BiDi helpers, column type `H` (**v1.3.4**) |
 | `code/model.py`, `code/quality_demo.py` | financial model, figures, generated LaTeX macros and TikZ snippets |
-| `code/lint_bidi.py` | build-time check for adjacent LTR runs and table column specs |
+| `code/lint_bidi.py` | build-time check for adjacent LTR runs, table column specs, `\tiny` and float placement |
 | `figures/` | generated figures (PDF), `numbers.tex`, `quality.tex`, `gantt.tex`, `riskmap.tex`, `model_excerpt.py` |
 | `bib/references.bib` | IEEE-style bibliography (biber) |
 | `PRD.md`, `PLAN.md`, `TODO.md` | requirements (with expert-committee criteria), work plan with status, task list |
@@ -59,7 +59,8 @@ Table of contents (page 2): [`docs/screenshots/toc.png`](docs/screenshots/toc.pn
 - **Mesh check:** `lead` sent PING to every other session and recorded the replies ([`docs/mesh-check.md`](docs/mesh-check.md)). The `writer` and `analyst` agents answered the PING and did no other recorded work. The image `docs/screenshots/mesh.png` is rendered from that file; it is not a window screenshot. Real captures of agent windows are in the section "New agents at work" below.
 - **QA round 2:** `detector [72ab50]` reported six findings; `fixer [35005a]` fixed them in 11 commits; the detector re-reviewed. Full record: [`docs/qa-report.md`](docs/qa-report.md). The fixer's commits carry the shared git identity.
 - **QA round 3 (documentation audit, 2026-11-25):** four new agents, `lead-qa`, `writer-qa`, `detector-qa` and `fixer-qa`, were started in terminal tabs in `C:\BIU01\HW2` with the role instructions in `prompts/agent-roles.md` and the skills in `skills/`. The older sessions named `lead`, `writer`, `detector` and `fixer` were not used, messaged or closed. `detector-qa` audited the documentation read-only and found four findings (F1 to F4, no blocker); `fixer-qa` fixed them in documentation, skill and prompt files only; `detector-qa` and `writer-qa` re-reviewed; `lead-qa` checked the scope (no PDF, code, class, chapter or figure changed, nothing committed). Record: [`docs/qa-report.md`](docs/qa-report.md) section 8; every message verbatim: [`prompts/06-qa-cycle-verbatim.md`](prompts/06-qa-cycle-verbatim.md).
-- **Incidents:** 21 (I-01 to I-21) plus one open known limitation (L-01), each with root cause and why it was not detected: [`docs/incidents.md`](docs/incidents.md). CLS history: [`docs/cls-changelog.md`](docs/cls-changelog.md).
+- **QA round 4 (`qa-super`, 2026-11-27):** run by the main session alone, without an independent detector. Eight findings (3 major, 5 minor): seven fixed (the build script now stops on a failed step, an orphaned heading, 6 pt text in figures, a class override in `main.tex`, a machine-specific font path, retyped table values, an unknown class option) and one open (L-02). Results, injection tests and the remaining issues: [`docs/qa-report.md`](docs/qa-report.md) section 9.
+- **Incidents:** 27 (I-01 to I-27) plus two known limitations, both open (L-01 table direction, L-02 no references to tables and figures), each with root cause and why it was not detected: [`docs/incidents.md`](docs/incidents.md). CLS history: [`docs/cls-changelog.md`](docs/cls-changelog.md).
 - **Iron rule:** defects are repaired in the CLS, a skill or the generator, never as a text-only patch.
 
 ### Agent mesh check (PING / PONG)
@@ -95,9 +96,10 @@ Collaboration status: both partners have now committed, pushed and pulled. Verif
 Open, not done:
 - Self-assessed grade: not written.
 - Word report form saved as `biu-sk26-ex02.pdf` and individual Moodle submission by each student: not done.
-- PRD 6.2: no standalone `qa-super` run exists; see `docs/qa-report.md`. PRD FR1 target of 18-22 pages is not met (16 pages, minimum 15).
-- Table column order is inconsistent: Tables 1, 5, 8 and 10 have the first column on the right, Tables 2, 3, 4, 6, 7, 9 and 11 on the left (`docs/incidents.md` L-01, corrected 2026-11-25; cause not established).
-- Typed (non-macro) numbers remain in chapters 2, 4 and 8.
+- PRD 6.2: a `qa-super` run was done on 2026-11-27 (`docs/qa-report.md` section 9) and ended with no open blocker or major finding, but its step 4 (confirmation by an independent `detector`) was not done, so the criterion stays open. PRD FR1 target of 18-22 pages is not met (16 pages, minimum 15).
+- Table column order: the first column is on the right in Tables 1, 5, 8 and 10 and on the left in the other seven (`docs/incidents.md` L-01; cause not established). A mix of directions alone is not recorded as a defect.
+- Typed numbers that are not constants of `model.py` remain: package photo limits, service targets, channel months, equation constants and the prose of chapters 2, 4, 5, 6 and 8. Tables 4, 6 and 11 now take their model values from macros (I-27).
+- L-02: no table and no figure is referenced in the text (0 of 11 and 0 of 14); not fixed because it changes the wording of the report.
 - Older agent sessions (`lead`, `writer`, `detector`, `fixer`, origin not established): left running and untouched. The round 3 agents (`*-qa`) are still open until the results are approved.
 
 Notes: the market size is an engineering estimate, not a cited statistic (stated in the text). Persona and customer names in the quote are fictional.
